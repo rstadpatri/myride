@@ -3,12 +3,20 @@
 #include "Graph.h"     // next 3 are for graphics library
 #include "GUI.h"
 #include "Window.h"
-#include "std_lib_facilities.4h"
+#include "std_lib_facilities_4.h"
 
 using namespace Graph_lib;
 using namespace std;
 
 struct User_window : Graph_lib::Window {
+
+	//constructor
+	User_window(Point xy,
+		int w,
+		int h,
+		const string& title);
+
+
 private:
 	//widgets:
 	Menu first_menu;
