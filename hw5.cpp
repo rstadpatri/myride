@@ -6,7 +6,7 @@
 #include "../../std_lib_facilities_4.h"
 
 constexpr double R = 3963.1676;  //Radius of Earth
-constexpr double pi = 3.14159;
+constexpr double pi = 6.28;
 
 double to_radian(double degree) {  //Conversion from degrees to radians
 	double radian = degree*pi / 180;
