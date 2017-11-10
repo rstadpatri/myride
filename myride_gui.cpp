@@ -70,10 +70,10 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	Window(xy, w, h, title),
 
 	quit_button(
-		Point(x_max) - 70, 0),
-	70, 20,
-	"Quit"
-	cb_quit),
+		Point(x_max() - 70, 0),
+		70, 20,
+		"Quit",
+		cb_quit),
 
 	first_menu(
 		Point(x_max() - 70, 30),
@@ -86,8 +86,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		80, 20,
 		"My Ride",
 		cb_menu)
-	)
-
+{
 	//constructor body
 
 	attach(quit_button);
@@ -98,42 +97,43 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "display", cb_display));
 	attach(first_menu);
 	first_menu.hide();
-	
+
 	attach(menu_button);
+}
 
-	//callback functions for buttons
-	void User_window::cb_quit(Address, Address pw) {
-		reference_to<User_window>(pw).quit();
-	}
-	void User_window::quit() {
-		hide();
-	}
+//callback functions for buttons
+void User_window::cb_quit(Address, Address pw) {
+	reference_to<User_window>(pw).quit();
+}
+void User_window::quit() {
+	hide();
+}
 
-	void User_window::cb_add(Address, Address pw) {
-		//code for add menu
-	}
+void User_window::cb_add(Address, Address pw) {
+	//code for add menu
+}
 
-	void User_window::cb_remove(Address, Address pw) {
-		//code for add menu
-	}
+void User_window::cb_remove(Address, Address pw) {
+	//code for add menu
+}
 
-	void User_window::cb_request(Address, Address pw) {
-		//code for add menu
-	}
+void User_window::cb_request(Address, Address pw) {
+	//code for add menu
+}
 
-	void User_window::cb_display(Address, Address pw) {
-		//code for add menu
-	}
+void User_window::cb_display(Address, Address pw) {
+	//code for add menu
+}
 
-	void User_window::cb_menu(Address, Address pw) {
-		reference_to<User_window>(pw).menu_pressed();
-	}
+void User_window::cb_menu(Address, Address pw) {
+	reference_to<User_window>(pw).menu_pressed();
+}
 
 int main() {
 	try {
 		User_window win(Point(100, 100), 600, 600, "My Ride");
 		return gui_main();
-}
+	}
 	catch (exception& e) {
 		cerr << "exception: " << e.what() << '\n';
 		return 1;
