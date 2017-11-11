@@ -40,6 +40,30 @@ public:
 	}
 };
 
+class Place : public Member {
+	double lat;
+	double lon;
+	vector<string> tags;
+
+public:
+	Place(string n, double lat, double lon)
+		: Member(n), lat(lat), lon(lon) {}
+
+	Place() {}
+
+	double get_latitude() const { return lat; }
+	double get_longitude() const { return lon; }
+	int get_tags_length() const { return tags.size(); }
+
+	vector<string> get_tags() const { return tags; }
+
+	void add_tag(string s) {
+		tags.push_back(s);
+	}
+
+	void print() {};  // Define for GUI
+};
+
 class Customer : public Member {
 private: 
 	double balance;
@@ -49,10 +73,10 @@ public:
 	Customer(string n, double bal) : Member(n), balance(bal) {};
 
 	double get_balance() const { return balance; }
-	double make_payment(double amount) {
+	void make_payment(double amount) {
 		balance = balance - amount;
 	}
-	double add_funds(double amount) {
+	void add_funds(double amount) {
 		balance = balance + amount;
 	}
 
@@ -79,33 +103,22 @@ public:
 	void print() {} //Needs defined for the GUI
 };
 
-class Place : public Member {
-	double lat;
-	double lon;
-	vector<string> tags;
-
-public:
-	Place(string n, double lat, double lon) 
-		: Member(n), lat(lat), lon(lon) {}
-
-	Place() {}
-
-	double get_latitude() const { return lat; }
-	double get_longitude() const { return lon; }
-	int get_tags_length() const { return tags.size(); }
-
-	vector<string> get_tags() const { return tags; }
-
-	void add_tag(string s) {
-		tags.push_back(s);
-	}
-
-	void print() {};  // Define for GUI
-};
-
 vector<Place> places;
 vector<Customer> customers;
 vector<Driver> drivers;
+
+bool operator==(Driver a, Driver b) {
+	if (a.get_name() == b.get_name()) {
+		return true;
+	}
+	else
+		return false;
+}
+
+ostream& operator<<(ostream& ost, Place p) {
+	ost << p.get_name();
+	return ost;
+}
 
 void add_place() {
 	//Takes in user input and creates a new Place_info object
@@ -239,7 +252,7 @@ void add_driver() {
 
 	string name;	//NEED GUI SUPPORT HERE
 	Place loc;
-	double balance;
+	double balance = 0;									// MAKE THIS A DECLARATION
 	//
 	//cout << "Input the driver's name: ";
 	//cin >> name;
@@ -286,7 +299,7 @@ vector<Place> ride_ordest() {
 
 	//NEED GUI SUPPORT
 	//cout << "\nWhere are you going? Would you like to enter a location name or tag?\n\n1 - name\n2 - tag\n";
-	int nametag;
+	int nametag = 1;
 	//cin >> nametag;
 	switch (nametag) {  //Switch case for entering either a tag or a name of a location
 	case 1:
@@ -317,7 +330,7 @@ vector<Place> ride_ordest() {
 		//getline(cin, extra_input);
 		//tag += extra_input;
 		for (unsigned int i = 0; i < places.size(); ++i) {
-			vector<string> tags = places[i].get_tags;
+			vector<string> tags = places[i].get_tags();
 			if ((tag == tags[0]) || (tag == tags[1])) {
 				 ordest.push_back(places[i]); 
 			}
@@ -336,7 +349,7 @@ Driver find_driver(vector<Place> ordest) {	//Returns the driver closest to the o
 	Driver designated_driver;  //Initialize with first driver
 
 	for (unsigned int i = 0; i < drivers.size(); ++i) {
-		Place driver_loc = drivers[i].get_place;
+		Place driver_loc = drivers[i].get_place();
 		distance = distance_between(ordest[0].get_latitude(), ordest[0].get_longitude(), driver_loc.get_latitude(), driver_loc.get_longitude());
 		if (distance < short_distance) {
 			designated_driver = drivers[i]; 
@@ -350,7 +363,7 @@ vector<Driver> find_driver_within(string tag, double radius) {
 	vector<Driver> eligible_drivers;
 	vector<Place> possible_places;
 	for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
-		vector<String> tags = places[i].get_tags;
+		vector<string> tags = places[i].get_tags();
 		for (unsigned int j = 0; i < tags.size(); ++j) {
 			if (tags[j] == tag){
 				possible_places.push_back(places[i]);
@@ -373,6 +386,7 @@ vector<Driver> find_driver_within(string tag, double radius) {
 			}
 		}
 	}
+	return eligible_drivers;
 }
 
 void request_ride() {
@@ -421,22 +435,7 @@ string initializing_file() {
 			string name;
 			double balance;
 			switch (i) {
-			case 0:   //Import drivers
-				for (int j = 0; j < total; ++j) {
-					Place loc;
-					ist >> name >> balance >> loc;  //Overload this operator
-					Driver new_driver{ name, loc, balance };
-					drivers.push_back(new_driver);
-				}
-				break;
-			case 1:   //Import customers
-				for (int j = 0; j < total; ++j) {
-					ist >> name >> balance;
-					Customer new_customer{ name, balance };
-					customers.push_back(new_customer);
-				}
-				break;
-			case 2:   //Import places
+			case 0:   //Import places
 				for (int j = 0; j < total; ++j) {
 					int number_tags;
 					double lat;
@@ -449,6 +448,28 @@ string initializing_file() {
 						new_place.add_tag(tag);
 					}
 					places.push_back(new_place);
+				}
+				break;
+			case 1:   //Import drivers
+				for (int j = 0; j < total; ++j) {
+					Place loc;
+					string loc_name;
+					ist >> name >> balance >> loc_name;  //Overload this operator
+					for (unsigned int i = 0; i < places.size(); ++i) {
+						if (places[i].get_name() == loc_name) {
+							loc = places[i];
+							i = places.size();
+						}
+					}
+					Driver new_driver{ name, loc, balance };
+					drivers.push_back(new_driver);
+				}
+				break;
+			case 2:   //Import customers
+				for (int j = 0; j < total; ++j) {
+					ist >> name >> balance;
+					Customer new_customer{ name, balance };
+					customers.push_back(new_customer);
 				}
 				break;
 			}
@@ -470,26 +491,27 @@ void write_to_file(string filename) {
 	try {
 		ofstream ost{ filename };
 		if (!ost) error("Can't open output file ", filename);
+		ost << places.size() << "\n";
+		for (unsigned int i = 0; i < places.size(); ++i) {
+			ost << places[i].get_name() << " " << places[i].get_latitude() << " " <<
+				places[i].get_longitude() << " " << places[i].get_tags_length();
+			vector<string> tags = places[i].get_tags();
+
+			for (int j = 0; j < places[i].get_tags_length(); ++j) {
+				ost << " " << tags[j];
+			}
+			ost << "\n";
+		}
+
 		ost << drivers.size() << "\n";
 		for (unsigned int i = 0; i < drivers.size(); ++i) {
-			ost << drivers[i].get_name() << " " << drivers[i].get_balance() << " " << drivers[i].get_place << "\n";
+			ost << drivers[i].get_name() << " " << drivers[i].get_balance() << " " 
+				<< drivers[i].get_place() << "\n";
 		}
 
 		ost << customers.size() << "\n";
 		for (unsigned int i = 0; i < customers.size(); ++i) {
 			ost << customers[i].get_name() << " " << customers[i].get_balance() << "\n";
-		}
-
-		ost << places.size() << "\n";
-		for (unsigned int i = 0; i < places.size(); ++i) {
-			ost << places[i].get_name() << " " << places[i].get_name() << " " << places[i].get_latitude() << " " <<
-				places[i].get_longitude() << " " << places[i].get_tags_length();
-			vector<string> tags = places[i].get_tags();
-
-			for (unsigned int j = 0; j < places[i].get_tags_length(); ++j) {
-				ost << " " << tags[j];
-			}
-			ost << "\n";
 		}
 	}
 	catch (runtime_error e) {
@@ -499,59 +521,60 @@ void write_to_file(string filename) {
 }
 
 //int main() {
-//	string filename = initializing_file();  //For HW5; calls function that imports data from input file
-//
-//	
-//	// NEED GUI SUPPORT --> Main Menu screen
-//	//int select = 1;
-//	//cout << "What would you like to do?\n";
-//	//while (select != 0) {
-//	//	cout << "\n1 - add customer\n2 - add driver\n3 - add place\n4 - add default places, drivers, and customers\n5 - add funds\n6 - request ride\n" 
-//	//		<< "7 - view customer info\n8 - view driver info\n9 - view places\n0 - quit program\n";
-//	//	cin >> select;
-//	//	switch (select) {
-//	//	case 1:
-//	//		add_customer(customers);
-//	//		break;
-//	//	case 2:
-//	//		add_driver(drivers);
-//	//		break;
-//	//	case 3:
-//	//		add_place(places);
-//	//		break;
-//	//	case 4:
-//	//		initialize_places(places, drivers, customers);
-//	//		break;
-//	//	case 5:
-//	//		double funds;
-//	//		cout << "How much funds would you like to add?\n";
-//	//		cin >> funds;
-//	//		customers = add_funds(funds, customers);
-//	//		break;
-//	//	case 6:
-//	//		request_ride(customers, places, drivers);
-//	//		break;
-//	//	case 7:
-//	//		for (unsigned int i = 0; i < customers.size(); ++i) { 
-//	//			customers[i].print(); 
-//	//		}
-//	//		break;
-//	//	case 8:
-//	//		for (unsigned int i = 0; i < drivers.size(); ++i) { 
-//	//			drivers[i].print(); 
-//	//		}
-//	//		break;
-//	//	case 9:
-//	//		for (unsigned int i = 0; i < places.size(); ++i) {
-//	//			places[i].print();
-//	//		}
-//	//		break;
-//	//	case 0:
-//	//		write_to_file(filename, places, customers, drivers);
-//	//		return 0;
-//	//	default:
-//	//		cout << "Enter a valid selection.\n";
-//	//		break;
-//	//	}
-//	//}
+////	string filename = initializing_file();  //For HW5; calls function that imports data from input file
+////
+////	
+////	// NEED GUI SUPPORT --> Main Menu screen
+////	//int select = 1;
+////	//cout << "What would you like to do?\n";
+////	//while (select != 0) {
+////	//	cout << "\n1 - add customer\n2 - add driver\n3 - add place\n4 - add default places, drivers, and customers\n5 - add funds\n6 - request ride\n" 
+////	//		<< "7 - view customer info\n8 - view driver info\n9 - view places\n0 - quit program\n";
+////	//	cin >> select;
+////	//	switch (select) {
+////	//	case 1:
+////	//		add_customer(customers);
+////	//		break;
+////	//	case 2:
+////	//		add_driver(drivers);
+////	//		break;
+////	//	case 3:
+////	//		add_place(places);
+////	//		break;
+////	//	case 4:
+////	//		initialize_places(places, drivers, customers);
+////	//		break;
+////	//	case 5:
+////	//		double funds;
+////	//		cout << "How much funds would you like to add?\n";
+////	//		cin >> funds;
+////	//		customers = add_funds(funds, customers);
+////	//		break;
+////	//	case 6:
+////	//		request_ride(customers, places, drivers);
+////	//		break;
+////	//	case 7:
+////	//		for (unsigned int i = 0; i < customers.size(); ++i) { 
+////	//			customers[i].print(); 
+////	//		}
+////	//		break;
+////	//	case 8:
+////	//		for (unsigned int i = 0; i < drivers.size(); ++i) { 
+////	//			drivers[i].print(); 
+////	//		}
+////	//		break;
+////	//	case 9:
+////	//		for (unsigned int i = 0; i < places.size(); ++i) {
+////	//			places[i].print();
+////	//		}
+////	//		break;
+////	//	case 0:
+////	//		write_to_file(filename, places, customers, drivers);
+////	//		return 0;
+////	//	default:
+////	//		cout << "Enter a valid selection.\n";
+////	//		break;
+////	//	}
+////	//}
+//	return 0;
 //}
