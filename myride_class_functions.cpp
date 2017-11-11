@@ -7,6 +7,7 @@
 
 constexpr double R = 3963.1676;  //Radius of Earth
 constexpr double pi = 3.14159;
+string filename = "Data File";
 
 double to_radian(double degree) {  //Conversion from degrees to radians
 	double radian = degree*pi / 180;
@@ -63,7 +64,7 @@ class Driver : public Member {
 	double balance;
 
 public:
-
+	Driver() {};
 	Driver(string name, Place loc) : Member(name), loc(loc), balance(0) {};
 	Driver(string name, Place loc, double balance) : Member(name), loc(loc), balance(balance) {};
 
@@ -102,7 +103,11 @@ public:
 	void print() {};  // Define for GUI
 };
 
-void add_place(vector<Place>& places) {
+vector<Place> places;
+vector<Customer> customers;
+vector<Driver> drivers;
+
+void add_place() {
 	//Takes in user input and creates a new Place_info object
 	//Unincluded error checking: I did not check to make sure that latitude and longitude were in the appropriate range.
 
@@ -151,7 +156,7 @@ double find_distance(Place x, Place y) {  //Essentially a more user friendly dis
 	return distance;
 }
 
-//void initialize_places(vector<Place>& places, vector<Driver>& drivers, vector<Customer>& customers) {  //Creates a list of landmarks to begin program
+//void initialize_places() {  //Creates a list of landmarks to begin program
 //	Geo_loc brightloc{ "Bright Building", 30.6190, -96.3389 };
 //	Place_info bright{ "Bright_Building", "College_Station", brightloc };
 //	bright.tags.push_back("computer_science");
@@ -193,7 +198,7 @@ double find_distance(Place x, Place y) {  //Essentially a more user friendly dis
 //	customers.push_back(terry);
 //}
 
-vector<Customer> add_funds(double addend, vector<Customer> customers) {  
+void add_funds(double addend) {  
 	//Adds funds (only works for customer accounts)
 	string customer_name;
 	//cout << "Whose account would you like to credit: ";  NEED GUI SUPPORT HERE
@@ -203,10 +208,9 @@ vector<Customer> add_funds(double addend, vector<Customer> customers) {
 			customers[i].add_funds(addend);
 		}
 	}
-	return customers;
 }
 
-void add_customer(vector<Customer>& customers) {
+void add_customer() {
 	string name;
 
 	//cout << "Input the customer's name: "; NEED GUI SUPPORT HERE
@@ -220,7 +224,15 @@ void add_customer(vector<Customer>& customers) {
 
 }
 
-void add_driver(vector<Driver>& drivers) {  
+template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
+	for (unsigned int i = 0; i < list.size(); ++i) {
+		if (list[i].get_name() == name) {
+			list.erase(list.begin() + i);
+		}
+	}
+}
+
+void add_driver() {  
 	//Did not error check for proper input types when using cin. Also did not check for in-range latitude and longitude.
 	//Adds a driver to the program; includes name, driver number, and current coordinates
 
@@ -242,7 +254,7 @@ void add_driver(vector<Driver>& drivers) {
 	drivers.push_back(new_driver);
 }
 
-vector<Place> ride_ordest(vector<Place>& places) {  
+vector<Place> ride_ordest() {  
 	//Returns Place vector with ride origin and destination
 	string extra_input;
 
@@ -260,7 +272,7 @@ vector<Place> ride_ordest(vector<Place>& places) {
 	//getline(cin, extra_input);
 	//location += extra_input;
 	if (location == "Other") { //Did not error check for improper input. User must enter one of the options verbatim
-		add_place(places);
+		add_place();
 		ordest.push_back(places.back()); 
 	}  
 
@@ -317,36 +329,65 @@ vector<Place> ride_ordest(vector<Place>& places) {
 	return ordest;
 }
 
-int find_driver(vector<Place> ordest, vector<Driver>& drivers) {	//Returns the driver closest to the origin of the route
+Driver find_driver(vector<Place> ordest) {	//Returns the driver closest to the origin of the route
 	vector<double> ranges;
 	double short_distance = 100000; //No two places on earth are 100000 miles apart
 	double distance;
-	int designated_driver = 0;  //Initialize with first driver
+	Driver designated_driver;  //Initialize with first driver
 
 	for (unsigned int i = 0; i < drivers.size(); ++i) {
 		Place driver_loc = drivers[i].get_place;
 		distance = distance_between(ordest[0].get_latitude(), ordest[0].get_longitude(), driver_loc.get_latitude(), driver_loc.get_longitude());
 		if (distance < short_distance) {
-			designated_driver = i; 
+			designated_driver = drivers[i]; 
 			short_distance = distance;
 		}
 	}
 	return designated_driver;
 }
 
-void request_ride(vector<Customer>& customers, vector<Place>& places, vector<Driver>& drivers) {
+vector<Driver> find_driver_within(string tag, double radius) {
+	vector<Driver> eligible_drivers;
+	vector<Place> possible_places;
+	for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
+		vector<String> tags = places[i].get_tags;
+		for (unsigned int j = 0; i < tags.size(); ++j) {
+			if (tags[j] == tag){
+				possible_places.push_back(places[i]);
+				i = places.size();
+			}
+		}
+	}
+	for (unsigned int i = 0; i < possible_places.size(); ++i) {   //Finds all drivers within the radius of all places with tag
+		for (unsigned int j = 0; j < drivers.size(); ++j) {
+			if (find_distance(possible_places[i], drivers[j].get_place()) <= radius) {
+				eligible_drivers.push_back(drivers[j]);
+			}
+		}
+	}
+	for (unsigned int i = 0; i + 1 < eligible_drivers.size(); ++i) {	//Eliminates duplicates
+		for (unsigned int j = i + 1; j < eligible_drivers.size(); ++j) {
+			if (eligible_drivers[i] == eligible_drivers[j]) {			//Overload this operator
+				eligible_drivers.erase(eligible_drivers.begin() + j);
+				--j;
+			}
+		}
+	}
+}
+
+void request_ride() {
 	//Finds driver, finds distance, credits driver account, changes driver's location, debits customer account, prints summary
 
 	string customer_name;
 	cout << "Enter your name: ";
 	cin >> customer_name;
 
-	vector<Place> ordest = ride_ordest(places);  // Returns vector with origin and destination
-	int designated_driver = find_driver(ordest, drivers); //Returns driver with closest driver
+	vector<Place> ordest = ride_ordest();  // Returns vector with origin and destination
+	Driver designated_driver = find_driver(ordest); //Returns driver with closest driver
 
 	double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
-	drivers[designated_driver].add_funds(distance*.5);  //Credits the driver's balance
-	drivers[designated_driver].change_place(ordest[1]); //Changes driver's location
+	designated_driver.add_funds(distance*.5);  //Credits the driver's balance
+	designated_driver.change_place(ordest[1]); //Changes driver's location
 
 	Customer designated_customer = customers[0]; //Initialization of customer requesting ride
 	for (unsigned int i = 0; i < customers.size(); ++i) {
@@ -356,13 +397,15 @@ void request_ride(vector<Customer>& customers, vector<Place>& places, vector<Dri
 		}
 	}
 
+	return;
+
 	//Summary of transaction -- NEED GUI SUPPORT
 	//cout << "\n" << drivers[designated_driver].name << " has driven " << designated_customer.name << " from " << ordest[0].name << " to "
 	//	<< ordest[1].name << ".\n" << drivers[designated_driver].name << "'s account has been credited with $" << fixed << setprecision(2) << distance / 2
 	//	<< ".\nAnd " << designated_customer.name << "'s account has been charged $" << distance << ".\n";  //Summary of transaction
 }
 
-string initializing_file(vector<Place>& places, vector<Customer>& customers, vector<Driver>& drivers) {
+string initializing_file() {
 	//Imports data from a file. Function returns string of filename for future overwriting.
 
 	//NEED GUI SUPPORT
@@ -371,7 +414,7 @@ string initializing_file(vector<Place>& places, vector<Customer>& customers, vec
 	//cin >> filename;
 	try {
 		ifstream ist{ filename };
-		if (!ist) error("Can't open input file ", filename);
+		if (!ist) error("Can't open data file ", filename);
 		for (unsigned int i = 0; i < 3; ++i) {
 			int total;
 			ist >> total;
@@ -416,13 +459,12 @@ string initializing_file(vector<Place>& places, vector<Customer>& customers, vec
 		cerr << e.what();
 		cout << "\n";
 		keep_window_open("x");
-		initialize_places(places, drivers, customers);
 		return "null";
 	}
 	
 }
 
-void write_to_file(string filename, const vector<Place>& places, const vector<Customer>& customers, const vector<Driver>& drivers) {
+void write_to_file(string filename) {
 	//Simply writes all information back out to file in the proper format.
 	//If improper filename was given, info is written to file name "null"
 	try {
@@ -457,10 +499,7 @@ void write_to_file(string filename, const vector<Place>& places, const vector<Cu
 }
 
 int main() {
-	vector<Place> places;
-	vector<Customer> customers;
-	vector<Driver> drivers;
-	string filename = initializing_file(places, customers, drivers);  //For HW5; calls function that imports data from input file
+	string filename = initializing_file();  //For HW5; calls function that imports data from input file
 
 	
 	// NEED GUI SUPPORT --> Main Menu screen
