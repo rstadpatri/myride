@@ -7,6 +7,7 @@
 
 constexpr double R = 3963.1676;  //Radius of Earth
 constexpr double pi = 3.14159;
+string filename = "Data File";
 
 double to_radian(double degree) {  //Conversion from degrees to radians
 	double radian = degree*pi / 180;
@@ -29,10 +30,11 @@ class Member {
 
 protected:
 	Member(string s) : name(s) {};
+	Member() {};
 
 public:
-	string get_name() { return name; };
-	string get_photo() { return photo_loc; }
+	string get_name() const { return name; };
+	string get_photo() const { return photo_loc; }
 	void add_photo(string s) {
 		photo_loc = s;
 	}
@@ -43,9 +45,10 @@ private:
 	double balance;
 
 public:
-	Customer(string name) : Member(name), balance(0) {}
+	Customer(string n) : Member(n), balance(0) {}
+	Customer(string n, double bal) : Member(n), balance(bal) {};
 
-	double get_balance() { return balance; }
+	double get_balance() const { return balance; }
 	double make_payment(double amount) {
 		balance = balance - amount;
 	}
@@ -61,12 +64,12 @@ class Driver : public Member {
 	double balance;
 
 public:
-
+	Driver() {};
 	Driver(string name, Place loc) : Member(name), loc(loc), balance(0) {};
 	Driver(string name, Place loc, double balance) : Member(name), loc(loc), balance(balance) {};
 
-	double get_balance() { return balance; }
-	Place get_place() { return loc; }
+	double get_balance() const { return balance; }
+	Place get_place() const { return loc; }
 	void add_funds(double amount) { 
 		balance = balance + amount; 
 	}
@@ -85,8 +88,11 @@ public:
 	Place(string n, double lat, double lon) 
 		: Member(n), lat(lat), lon(lon) {}
 
+	Place() {}
+
 	double get_latitude() const { return lat; }
 	double get_longitude() const { return lon; }
+	int get_tags_length() const { return tags.size(); }
 
 	vector<string> get_tags() const { return tags; }
 
@@ -97,7 +103,11 @@ public:
 	void print() {};  // Define for GUI
 };
 
-void add_place(vector<Place>& places) {
+vector<Place> places;
+vector<Customer> customers;
+vector<Driver> drivers;
+
+void add_place() {
 	//Takes in user input and creates a new Place_info object
 	//Unincluded error checking: I did not check to make sure that latitude and longitude were in the appropriate range.
 
@@ -146,7 +156,7 @@ double find_distance(Place x, Place y) {  //Essentially a more user friendly dis
 	return distance;
 }
 
-//void initialize_places(vector<Place>& places, vector<Driver>& drivers, vector<Customer>& customers) {  //Creates a list of landmarks to begin program
+//void initialize_places() {  //Creates a list of landmarks to begin program
 //	Geo_loc brightloc{ "Bright Building", 30.6190, -96.3389 };
 //	Place_info bright{ "Bright_Building", "College_Station", brightloc };
 //	bright.tags.push_back("computer_science");
@@ -188,7 +198,7 @@ double find_distance(Place x, Place y) {  //Essentially a more user friendly dis
 //	customers.push_back(terry);
 //}
 
-vector<Customer> add_funds(double addend, vector<Customer> customers) {  
+void add_funds(double addend) {  
 	//Adds funds (only works for customer accounts)
 	string customer_name;
 	//cout << "Whose account would you like to credit: ";  NEED GUI SUPPORT HERE
@@ -198,10 +208,9 @@ vector<Customer> add_funds(double addend, vector<Customer> customers) {
 			customers[i].add_funds(addend);
 		}
 	}
-	return customers;
 }
 
-void add_customer(vector<Customer>& customers) {
+void add_customer() {
 	string name;
 
 	//cout << "Input the customer's name: "; NEED GUI SUPPORT HERE
@@ -215,7 +224,15 @@ void add_customer(vector<Customer>& customers) {
 
 }
 
-void add_driver(vector<Driver>& drivers) {  
+template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
+	for (unsigned int i = 0; i < list.size(); ++i) {
+		if (list[i].get_name() == name) {
+			list.erase(list.begin() + i);
+		}
+	}
+}
+
+void add_driver() {  
 	//Did not error check for proper input types when using cin. Also did not check for in-range latitude and longitude.
 	//Adds a driver to the program; includes name, driver number, and current coordinates
 
@@ -237,7 +254,7 @@ void add_driver(vector<Driver>& drivers) {
 	drivers.push_back(new_driver);
 }
 
-vector<Place> ride_ordest(vector<Place>& places) {  
+vector<Place> ride_ordest() {  
 	//Returns Place vector with ride origin and destination
 	string extra_input;
 
@@ -255,7 +272,7 @@ vector<Place> ride_ordest(vector<Place>& places) {
 	//getline(cin, extra_input);
 	//location += extra_input;
 	if (location == "Other") { //Did not error check for improper input. User must enter one of the options verbatim
-		add_place(places);
+		add_place();
 		ordest.push_back(places.back()); 
 	}  
 
@@ -312,36 +329,65 @@ vector<Place> ride_ordest(vector<Place>& places) {
 	return ordest;
 }
 
-int find_driver(vector<Place> ordest, vector<Driver>& drivers) {	//Returns the driver closest to the origin of the route
+Driver find_driver(vector<Place> ordest) {	//Returns the driver closest to the origin of the route
 	vector<double> ranges;
 	double short_distance = 100000; //No two places on earth are 100000 miles apart
 	double distance;
-	int designated_driver = 0;  //Initialize with first driver
+	Driver designated_driver;  //Initialize with first driver
 
 	for (unsigned int i = 0; i < drivers.size(); ++i) {
 		Place driver_loc = drivers[i].get_place;
 		distance = distance_between(ordest[0].get_latitude(), ordest[0].get_longitude(), driver_loc.get_latitude(), driver_loc.get_longitude());
 		if (distance < short_distance) {
-			designated_driver = i; 
+			designated_driver = drivers[i]; 
 			short_distance = distance;
 		}
 	}
 	return designated_driver;
 }
 
-void request_ride(vector<Customer>& customers, vector<Place>& places, vector<Driver>& drivers) {
+vector<Driver> find_driver_within(string tag, double radius) {
+	vector<Driver> eligible_drivers;
+	vector<Place> possible_places;
+	for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
+		vector<String> tags = places[i].get_tags;
+		for (unsigned int j = 0; i < tags.size(); ++j) {
+			if (tags[j] == tag){
+				possible_places.push_back(places[i]);
+				i = places.size();
+			}
+		}
+	}
+	for (unsigned int i = 0; i < possible_places.size(); ++i) {   //Finds all drivers within the radius of all places with tag
+		for (unsigned int j = 0; j < drivers.size(); ++j) {
+			if (find_distance(possible_places[i], drivers[j].get_place()) <= radius) {
+				eligible_drivers.push_back(drivers[j]);
+			}
+		}
+	}
+	for (unsigned int i = 0; i + 1 < eligible_drivers.size(); ++i) {	//Eliminates duplicates
+		for (unsigned int j = i + 1; j < eligible_drivers.size(); ++j) {
+			if (eligible_drivers[i] == eligible_drivers[j]) {			//Overload this operator
+				eligible_drivers.erase(eligible_drivers.begin() + j);
+				--j;
+			}
+		}
+	}
+}
+
+void request_ride() {
 	//Finds driver, finds distance, credits driver account, changes driver's location, debits customer account, prints summary
 
 	string customer_name;
 	cout << "Enter your name: ";
 	cin >> customer_name;
 
-	vector<Place> ordest = ride_ordest(places);  // Returns vector with origin and destination
-	int designated_driver = find_driver(ordest, drivers); //Returns driver with closest driver
+	vector<Place> ordest = ride_ordest();  // Returns vector with origin and destination
+	Driver designated_driver = find_driver(ordest); //Returns driver with closest driver
 
 	double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
-	drivers[designated_driver].add_funds(distance*.5);  //Credits the driver's balance
-	drivers[designated_driver].change_place(ordest[1]); //Changes driver's location
+	designated_driver.add_funds(distance*.5);  //Credits the driver's balance
+	designated_driver.change_place(ordest[1]); //Changes driver's location
 
 	Customer designated_customer = customers[0]; //Initialization of customer requesting ride
 	for (unsigned int i = 0; i < customers.size(); ++i) {
@@ -351,53 +397,56 @@ void request_ride(vector<Customer>& customers, vector<Place>& places, vector<Dri
 		}
 	}
 
+	return;
+
 	//Summary of transaction -- NEED GUI SUPPORT
 	//cout << "\n" << drivers[designated_driver].name << " has driven " << designated_customer.name << " from " << ordest[0].name << " to "
 	//	<< ordest[1].name << ".\n" << drivers[designated_driver].name << "'s account has been credited with $" << fixed << setprecision(2) << distance / 2
 	//	<< ".\nAnd " << designated_customer.name << "'s account has been charged $" << distance << ".\n";  //Summary of transaction
 }
 
-string initializing_file(vector<Place_info>& places, vector<Customer>& customers, vector<Driver>& drivers) {
+string initializing_file() {
 	//Imports data from a file. Function returns string of filename for future overwriting.
-	cout << "Please enter input filename: ";
+
+	//NEED GUI SUPPORT
+	//cout << "Please enter input filename: ";
 	string filename;
-	cin >> filename;
+	//cin >> filename;
 	try {
 		ifstream ist{ filename };
-		if (!ist) error("Can't open input file ", filename);
+		if (!ist) error("Can't open data file ", filename);
 		for (unsigned int i = 0; i < 3; ++i) {
 			int total;
 			ist >> total;
+			string name;
+			double balance;
 			switch (i) {
 			case 0:   //Import drivers
 				for (int j = 0; j < total; ++j) {
-					string driver_name;
-					ist >> driver_name;
-					Driver new_driver{ driver_name };
-					ist >> new_driver.balance >> new_driver.loc.lat >> new_driver.loc.lon;
+					Place loc;
+					ist >> name >> balance >> loc;  //Overload this operator
+					Driver new_driver{ name, loc, balance };
 					drivers.push_back(new_driver);
 				}
 				break;
 			case 1:   //Import customers
 				for (int j = 0; j < total; ++j) {
-					string customer_name;
-					ist >> customer_name;
-					Customer new_customer{ customer_name };
-					ist >> new_customer.balance;
+					ist >> name >> balance;
+					Customer new_customer{ name, balance };
 					customers.push_back(new_customer);
 				}
 				break;
 			case 2:   //Import places
 				for (int j = 0; j < total; ++j) {
 					int number_tags;
-					string place_name;
-					ist >> place_name;
-					Place_info new_place{ place_name };
-					ist >> new_place.address >> new_place.loc.lat >> new_place.loc.lon >> number_tags;
+					double lat;
+					double lon;
+					string tag;
+					ist >> name >> lat >> lon >> number_tags;
+					Place new_place{ name, lat, lon };
 					for (int i = 0; i < number_tags; ++i) {
-						string tag;
 						ist >> tag;
-						new_place.tags.push_back(tag);
+						new_place.add_tag(tag);
 					}
 					places.push_back(new_place);
 				}
@@ -410,13 +459,12 @@ string initializing_file(vector<Place_info>& places, vector<Customer>& customers
 		cerr << e.what();
 		cout << "\n";
 		keep_window_open("x");
-		initialize_places(places, drivers, customers);
 		return "null";
 	}
 	
 }
 
-void write_to_file(string filename, const vector<Place_info>& places, const vector<Customer>& customers, const vector<Driver>& drivers) {
+void write_to_file(string filename) {
 	//Simply writes all information back out to file in the proper format.
 	//If improper filename was given, info is written to file name "null"
 	try {
@@ -424,20 +472,22 @@ void write_to_file(string filename, const vector<Place_info>& places, const vect
 		if (!ost) error("Can't open output file ", filename);
 		ost << drivers.size() << "\n";
 		for (unsigned int i = 0; i < drivers.size(); ++i) {
-			ost << drivers[i].name << " " << drivers[i].balance << " " << drivers[i].loc.lat << " " << drivers[i].loc.lon << "\n";
+			ost << drivers[i].get_name() << " " << drivers[i].get_balance() << " " << drivers[i].get_place << "\n";
 		}
 
 		ost << customers.size() << "\n";
 		for (unsigned int i = 0; i < customers.size(); ++i) {
-			ost << customers[i].name << " " << customers[i].balance << "\n";
+			ost << customers[i].get_name() << " " << customers[i].get_balance() << "\n";
 		}
 
 		ost << places.size() << "\n";
 		for (unsigned int i = 0; i < places.size(); ++i) {
-			ost << places[i].name << " " << places[i].address << " " << places[i].loc.lat << " " <<
-				places[i].loc.lon << " " << places[i].tags.size();
-			for (unsigned int j = 0; j < places[i].tags.size(); ++j) {
-				ost << " " << places[i].tags[j];
+			ost << places[i].get_name() << " " << places[i].get_name() << " " << places[i].get_latitude() << " " <<
+				places[i].get_longitude() << " " << places[i].get_tags_length();
+			vector<string> tags = places[i].get_tags();
+
+			for (unsigned int j = 0; j < places[i].get_tags_length(); ++j) {
+				ost << " " << tags[j];
 			}
 			ost << "\n";
 		}
@@ -449,60 +499,59 @@ void write_to_file(string filename, const vector<Place_info>& places, const vect
 }
 
 int main() {
-	vector<Place_info> places;
-	vector<Customer> customers;
-	vector<Driver> drivers;
-	string filename = initializing_file(places, customers, drivers);  //For HW5; calls function that imports data from input file
+	string filename = initializing_file();  //For HW5; calls function that imports data from input file
 
-	int select = 1;
-	cout << "What would you like to do?\n";
-	while (select != 0) {
-		cout << "\n1 - add customer\n2 - add driver\n3 - add place\n4 - add default places, drivers, and customers\n5 - add funds\n6 - request ride\n" 
-			<< "7 - view customer info\n8 - view driver info\n9 - view places\n0 - quit program\n";
-		cin >> select;
-		switch (select) {
-		case 1:
-			add_customer(customers);
-			break;
-		case 2:
-			add_driver(drivers);
-			break;
-		case 3:
-			add_place(places);
-			break;
-		case 4:
-			initialize_places(places, drivers, customers);
-			break;
-		case 5:
-			double funds;
-			cout << "How much funds would you like to add?\n";
-			cin >> funds;
-			customers = add_funds(funds, customers);
-			break;
-		case 6:
-			request_ride(customers, places, drivers);
-			break;
-		case 7:
-			for (unsigned int i = 0; i < customers.size(); ++i) { 
-				customers[i].print(); 
-			}
-			break;
-		case 8:
-			for (unsigned int i = 0; i < drivers.size(); ++i) { 
-				drivers[i].print(); 
-			}
-			break;
-		case 9:
-			for (unsigned int i = 0; i < places.size(); ++i) {
-				places[i].print();
-			}
-			break;
-		case 0:
-			write_to_file(filename, places, customers, drivers);
-			return 0;
-		default:
-			cout << "Enter a valid selection.\n";
-			break;
-		}
-	}
+	
+	// NEED GUI SUPPORT --> Main Menu screen
+	//int select = 1;
+	//cout << "What would you like to do?\n";
+	//while (select != 0) {
+	//	cout << "\n1 - add customer\n2 - add driver\n3 - add place\n4 - add default places, drivers, and customers\n5 - add funds\n6 - request ride\n" 
+	//		<< "7 - view customer info\n8 - view driver info\n9 - view places\n0 - quit program\n";
+	//	cin >> select;
+	//	switch (select) {
+	//	case 1:
+	//		add_customer(customers);
+	//		break;
+	//	case 2:
+	//		add_driver(drivers);
+	//		break;
+	//	case 3:
+	//		add_place(places);
+	//		break;
+	//	case 4:
+	//		initialize_places(places, drivers, customers);
+	//		break;
+	//	case 5:
+	//		double funds;
+	//		cout << "How much funds would you like to add?\n";
+	//		cin >> funds;
+	//		customers = add_funds(funds, customers);
+	//		break;
+	//	case 6:
+	//		request_ride(customers, places, drivers);
+	//		break;
+	//	case 7:
+	//		for (unsigned int i = 0; i < customers.size(); ++i) { 
+	//			customers[i].print(); 
+	//		}
+	//		break;
+	//	case 8:
+	//		for (unsigned int i = 0; i < drivers.size(); ++i) { 
+	//			drivers[i].print(); 
+	//		}
+	//		break;
+	//	case 9:
+	//		for (unsigned int i = 0; i < places.size(); ++i) {
+	//			places[i].print();
+	//		}
+	//		break;
+	//	case 0:
+	//		write_to_file(filename, places, customers, drivers);
+	//		return 0;
+	//	default:
+	//		cout << "Enter a valid selection.\n";
+	//		break;
+	//	}
+	//}
 }
