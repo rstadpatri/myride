@@ -78,11 +78,11 @@ private:
 		add_driver.show();
 		add_place.hide();
 		add_name.show();
-		add_balance.show();
-		add_driver_place.show();
-		add_lat.hide();
-		add_lon.hide();
-		add_tags.hide();
+		add_balance.hide();
+		add_driver_place.hide();
+		add_lat.show();
+		add_lon.show();
+		add_tags.show();
 		add_photo_loc.show();
 	}
 
@@ -217,6 +217,31 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	//constructor body
 
 	attach(quit_button);
+	attach(add_customer);
+	attach(add_driver);
+	attach(add_place);
+	attach(add_submit);
+	attach(add_name);
+	attach(add_balance);
+	attach(add_driver_place);
+	attach(add_lat);
+	attach(add_lon);
+	attach(add_tags);
+	attach(add_photo_loc);
+	attach(add_type);
+
+	add_customer.hide();
+	add_driver.hide();
+	add_place.hide();
+	add_submit.hide();
+	add_name.hide();
+	add_balance.hide();
+	add_driver_place.hide();
+	add_lat.hide();
+	add_lon.hide();
+	add_tags.hide();
+	add_photo_loc.hide();
+	add_type.hide();
 
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
