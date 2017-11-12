@@ -70,20 +70,20 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	Window(xy, w, h, title),
 
 	quit_button(
-		Point(x_max() - 70, 0),
-		70, 20,
+		Point(x_max()/2 - 50, 5*y_max()/6-20),
+		100, 40,
 		"Quit",
 		cb_quit),
 
 	first_menu(
-		Point(x_max() - 70, 30),
-		70, 20,
+		Point(x_max()/2 - 50, y_max()/6),
+		100, 40,
 		Menu::vertical,
 		"My Ride"),
 
 	menu_button(
-		Point(x_max() - 80, 30),
-		80, 20,
+		Point(x_max()/2 - 50, y_max()/6),
+		100, 40,
 		"My Ride",
 		cb_menu)
 {
