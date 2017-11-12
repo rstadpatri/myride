@@ -38,6 +38,9 @@ public:
 	void add_photo(string s) {
 		photo_loc = s;
 	}
+	virtual string display() {
+		return "Virtual function error";
+	}
 };
 
 class Place : public Member {
@@ -62,6 +65,16 @@ public:
 	}
 
 	void print() {};  // Define for GUI
+
+	string display() {
+		string for_display;
+		for_display = get_name() + "\n";
+		for (unsigned int i = 0; i < tags.size(); ++i) {
+			for_display = for_display + tags[i] + " ";
+		}
+		for_display = for_display + "\n" + to_string(lat) + "\n" + to_string(lon) + "\n";
+		return for_display;
+	}
 };
 
 class Customer : public Member {
@@ -80,7 +93,12 @@ public:
 		balance = balance + amount;
 	}
 
-	void print() {}; //Needs written with GUI. Virtual function?
+	string display() {
+		string for_display;
+		for_display = get_name() + "\n"
+			+ to_string(get_balance()) + "\n";
+		return for_display;
+	}
 };
 
 class Driver : public Member {
@@ -100,7 +118,13 @@ public:
 	void change_place(Place p) {
 		loc = p;
 	}
-	void print() {} //Needs defined for the GUI
+
+	string display() {
+		string for_display;
+		for_display = get_name() + "\n" + to_string(balance) + "\n" + loc.get_name()
+			+ "\n" + to_string(loc.get_latitude()) + "\n" + to_string(loc.get_longitude()) + "\n";
+		return for_display;
+	}
 };
 
 vector<Place> places;
