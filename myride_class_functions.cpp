@@ -342,6 +342,16 @@ vector<Place> ride_ordest() {
 	return ordest;
 }
 
+vector<Customer> find_neg_customer() {
+	vector<Customer> negative_customers;
+	for (unsigned int i = 0; i < customers.size(); ++i) {
+		if (customers[i].get_balance() < 0) {
+			negative_customers.push_back(customers[i]);
+		}
+	}
+	return negative_customers;
+}
+
 Driver find_driver(vector<Place> ordest) {	//Returns the driver closest to the origin of the route
 	vector<double> ranges;
 	double short_distance = 100000; //No two places on earth are 100000 miles apart
@@ -419,7 +429,7 @@ void request_ride() {
 	//	<< ".\nAnd " << designated_customer.name << "'s account has been charged $" << distance << ".\n";  //Summary of transaction
 }
 
-string initializing_file() {
+string import_data() {
 	//Imports data from a file. Function returns string of filename for future overwriting.
 
 	//NEED GUI SUPPORT
@@ -485,7 +495,7 @@ string initializing_file() {
 	
 }
 
-void write_to_file(string filename) {
+void export_data(string filename) {
 	//Simply writes all information back out to file in the proper format.
 	//If improper filename was given, info is written to file name "null"
 	try {
