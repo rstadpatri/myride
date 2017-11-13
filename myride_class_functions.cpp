@@ -409,7 +409,7 @@
 
 	}
 
-	void export_data(string filename) {
+	void export_data() {
 		//Simply writes all information back out to file in the proper format.
 		//If improper filename was given, info is written to file name "null"
 		try {
@@ -424,18 +424,19 @@
 				for (int j = 0; j < places[i].get_tags_length(); ++j) {
 					ost << " " << tags[j];
 				}
-				ost << "\n";
+				ost << places[i].export_photo() << "\n";
 			}
 
 			ost << drivers.size() << "\n";
 			for (unsigned int i = 0; i < drivers.size(); ++i) {
 				ost << drivers[i].get_name() << " " << drivers[i].get_balance() << " "
-					<< drivers[i].get_place() << "\n";
+					<< drivers[i].get_place() << " " << drivers[i].export_photo() << "\n";
 			}
 
 			ost << customers.size() << "\n";
 			for (unsigned int i = 0; i < customers.size(); ++i) {
-				ost << customers[i].get_name() << " " << customers[i].get_balance() << "\n";
+				ost << customers[i].get_name() << " " << customers[i].get_balance() << " " 
+					<< drivers[i].export_photo() << "\n";
 			}
 		}
 		catch (runtime_error e) {

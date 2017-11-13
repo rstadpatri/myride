@@ -17,11 +17,12 @@ namespace funct_lib {
 		string photo_loc;
 
 	protected:
-		Member(string s) : name(s) {/*photo_loc = default_loc*/};
-		Member(string s, string p) : name(s), photo_loc(p) {};
+		Member(string s) : name(s), photo_added(false) {/*photo_loc = default_loc*/};
+		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {};
 		Member() {};
 
 	public:
+		bool photo_added;
 		string get_name() const { return name; };
 		string get_photo() const { return photo_loc; }
 		void add_photo(string s) {
@@ -29,6 +30,14 @@ namespace funct_lib {
 		}
 		virtual string display() {
 			return "Virtual function error";
+		}
+		string export_photo() {
+			string to_print = name + " ";
+			if (photo_added) {
+				to_print += "1 " + photo_loc;
+			}
+			else
+				to_print += "0";
 		}
 	};
 
@@ -153,6 +162,6 @@ namespace funct_lib {
 
 	string import_data();
 
-	void export_data(string filename);
+	void export_data();
 }
 #endif
