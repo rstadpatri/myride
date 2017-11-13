@@ -16,13 +16,116 @@ namespace funct_lib {
 		// Formula for calculating distance between waypoints
 
 
-	class Member;
+	class Member {
+		string name;
+		string photo_loc;
 
-	class Place;
+	protected:
+		Member(string s) : name(s) {};
+		Member(string s, string p) : name(s), photo_loc(p) {};
+		Member() {};
 
-	class Customer;
+	public:
+		string get_name() const { return name; };
+		string get_photo() const { return photo_loc; }
+		void add_photo(string s) {
+			photo_loc = s;
+		}
+		virtual string display() {
+			return "Virtual function error";
+		}
+	};
 
-	class Driver;
+	class Place : public Member {
+		double lat;
+		double lon;
+		vector<string> tags;
+
+	public:
+		Place(string n, double lat, double lon)
+			: Member(n), lat(lat), lon(lon) {}
+
+		Place(string n, double lat, double lon, string photo_loc)
+			: Member(n, photo_loc), lat(lat), lon(lon) {}
+
+		Place() {}
+
+		double get_latitude() const { return lat; }
+		double get_longitude() const { return lon; }
+		int get_tags_length() const { return tags.size(); }
+
+		vector<string> get_tags() const { return tags; }
+
+		void add_tag(string s) {
+			tags.push_back(s);
+		}
+
+		void print() {};  // Define for GUI
+
+		string display() {
+			string for_display;
+			for_display = get_name() + "\n";
+			for (unsigned int i = 0; i < tags.size(); ++i) {
+				for_display = for_display + tags[i] + " ";
+			}
+			for_display = for_display + "\n" + to_string(lat) + "\n" + to_string(lon) + "\n";
+			return for_display;
+		}
+	};
+
+	class Customer : public Member {
+	private:
+		double balance;
+
+	public:
+		Customer(string n) : Member(n), balance(0) {}
+		Customer(string n, double bal) : Member(n), balance(bal) {};
+		Customer(string n, double bal, string photo_loc) : Member(n, photo_loc), balance(bal) {};
+
+		double get_balance() const { return balance; }
+		void make_payment(double amount) {
+			balance = balance - amount;
+		}
+		void add_funds(double amount) {
+			balance = balance + amount;
+		}
+
+		string display() {
+			string for_display;
+			for_display = get_name() + "\n"
+				+ to_string(get_balance()) + "\n";
+			return for_display;
+		}
+	};
+
+	class Driver : public Member {
+		Place loc;
+		double balance;
+
+	public:
+		Driver() {};
+		Driver(string name, Place loc) : Member(name), loc(loc), balance(0) {};
+		Driver(string name, Place loc, double balance) : Member(name), loc(loc), balance(balance) {};
+		Driver(string name, Place loc, double balance, string photo_loc)
+			: Member(name, photo_loc), loc(loc), balance(balance) {};
+
+		double get_balance() const { return balance; }
+		Place get_place() const { return loc; }
+		void add_funds(double amount) {
+			balance = balance + amount;
+		}
+		void change_place(Place p) {
+			loc = p;
+		}
+
+		string display() {
+			string for_display;
+			for_display = get_name() + "\n" + to_string(balance) + "\n" + loc.get_name()
+				+ "\n" + to_string(loc.get_latitude()) + "\n" + to_string(loc.get_longitude()) + "\n";
+			return for_display;
+		}
+	};
+
 
 	vector<Place> places;
 	vector<Customer> customers;
@@ -38,11 +141,11 @@ namespace funct_lib {
 
 	void add_funds(double addend);
 
-	void add_customer();
+	void add_customer(string name, double balance, string photo_loc);
 
 	template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
 
-	void add_driver();
+	void add_driver(string name, double balance, Place loc, string photo_loc);
 
 	vector<Place> ride_ordest();
 
@@ -52,7 +155,7 @@ namespace funct_lib {
 
 	void request_ride();
 
-	string import_data();
+	string import_data(string filename;
 
 	void export_data(string filename);
 }
