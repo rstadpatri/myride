@@ -34,6 +34,11 @@ private:
 	In_box add_tags;
 	In_box add_photo_loc;
 	Out_box add_type;
+	Button remove_customer;
+	Button remove_driver;
+	Button remove_place;
+	Button remove_submit;
+	In_box remove_name;
 
 	char add_indicator;
 
@@ -141,8 +146,42 @@ private:
 	}
 
 	void remove_pressed() {
-		//remove menu here
 		hide_menu();
+		remove_customer.show();
+		remove_driver.show();
+		remove_place.show();
+	}
+
+	void remove_customer_pressed() {
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.hide();
+		remove_driver.show();
+		remove_place.show();
+	}
+
+	void remove_driver_pressed() {
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.show();
+		remove_driver.hide();
+		remove_place.show();
+	}
+
+	void remove_place_pressed() {
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.show();
+		remove_driver.show();
+		remove_place.hide();
+	}
+
+	void remove_submit_pressed() {
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.show();
+		remove_driver.show();
+		remove_place.show();
 	}
 
 	void request_pressed() {
@@ -172,6 +211,10 @@ private:
 	static void cb_add_driver(Address, Address);
 	static void cb_add_place(Address, Address);
 	static void cb_add_submit(Address, Address);
+	static void cb_remove_customer(Address, Address);
+	static void cb_remove_driver(Address, Address);
+	static void cb_remove_place(Address, Address);
+	static void cb_remove_submit(Address, Address);
 };
 
 User_window::User_window(Point xy, int w, int h, const string& title) :
@@ -179,23 +222,29 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	Window(xy, w, h, title),
 
 	quit_button(
-		Point(x_max()/2 - 50, 5*y_max()/6-20),
+		Point(x_max() / 2 - 50, 5 * y_max() / 6 - 20),
 		100, 40,
 		"Quit",
 		cb_quit),
 
 	first_menu(
-		Point(x_max()/2 - 50, y_max()/6),
+		Point(x_max() / 2 - 50, y_max() / 6),
 		100, 40,
 		Menu::vertical,
 		"My Ride"),
 
+<<<<<<< HEAD
 	add_customer_button(
 		Point(x_max()/4 - 50, 50),
+=======
+	add_customer(
+		Point(x_max() / 4 - 50, 50),
+>>>>>>> 3560bb87a2c00aaf5fe6b5d42016714719a8a59d
 		100, 40,
 		"Customer",
 		cb_add_customer),
 
+<<<<<<< HEAD
 	add_driver_button(
 		Point(2*x_max()/4 - 50, 50),
 		100, 40,
@@ -204,22 +253,32 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	
 	add_place_button(
 		Point(3*x_max()/4 - 50, 50),
+=======
+	add_driver(
+		Point(2 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Driver",
+		cb_add_driver),
+
+	add_place(
+		Point(3 * x_max() / 4 - 50, 50),
+>>>>>>> 3560bb87a2c00aaf5fe6b5d42016714719a8a59d
 		100, 40,
 		"Place",
 		cb_add_place),
 
 	add_submit(
-		Point(x_max()-100, y_max()-80),
+		Point(x_max() - 100, y_max() - 80),
 		100, 40,
 		"Submit",
 		cb_add_submit),
 
-	add_name(									
-		Point(x_max() / 2 - 50, 100),		
+	add_name(
+		Point(x_max() / 2 - 50, 100),
 		100, 20,
 		"Name:"),
 
-	add_balance	(
+	add_balance(
 		Point(x_max() / 2 - 50, 130),
 		100, 20,
 		"Balance:"),
@@ -252,7 +311,36 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	add_type(
 		Point(x_max() - 100, y_max() - 100),
 		100, 20,
-		"Selected Type:")
+		"Selected Type:"),
+
+	remove_customer(
+		Point(x_max() / 4 - 50, 50),
+		100, 40,
+		"Customer",
+		cb_remove_customer),
+
+	remove_driver(
+		Point(2 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Driver",
+		cb_remove_driver),
+
+	remove_place(
+		Point(3 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Place",
+		cb_remove_place),
+
+	remove_submit(
+		Point(x_max() - 100, y_max() - 80),
+		100, 40,
+		"Submit",
+		cb_remove_submit),
+
+	remove_name(
+		Point(x_max() / 2 - 50, 100),
+		100, 20,
+		"Name:")
 
 {
 	//constructor body
@@ -270,6 +358,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(add_tags);
 	attach(add_photo_loc);
 	attach(add_type);
+	attach(remove_customer);
+	attach(remove_driver);
+	attach(remove_place);
+	attach(remove_submit);
+	attach(remove_name);
+
 
 	add_customer_button.hide();
 	add_driver_button.hide();
@@ -283,6 +377,11 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	add_tags.hide();
 	add_photo_loc.hide();
 	add_type.hide();
+	remove_customer.hide();
+	remove_driver.hide();
+	remove_place.hide();
+	remove_submit.hide();
+	remove_name.hide();
 
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
@@ -321,15 +420,31 @@ void User_window::cb_add_submit(Address, Address pw) {
 }
 
 void User_window::cb_remove(Address, Address pw) {
-	//code for remove menu
+	reference_to<User_window>(pw).remove_pressed();
+}
+
+void User_window::cb_remove_customer(Address, Address pw) {
+	reference_to<User_window>(pw).remove_customer_pressed();
+}
+
+void User_window::cb_remove_driver(Address, Address pw) {
+	reference_to<User_window>(pw).remove_driver_pressed();
+}
+
+void User_window::cb_remove_place(Address, Address pw) {
+	reference_to<User_window>(pw).remove_place_pressed();
+}
+
+void User_window::cb_remove_submit(Address, Address pw) {
+	reference_to<User_window>(pw).remove_submit_pressed();
 }
 
 void User_window::cb_request(Address, Address pw) {
-	//code for request menu
+	//reference to request pressed
 }
 
 void User_window::cb_display(Address, Address pw) {
-	//code for display menu
+	//reference to display pressed
 }
 
 void User_window::cb_menu(Address, Address pw) {
