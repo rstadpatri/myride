@@ -6,10 +6,6 @@
 
 namespace funct_lib {
 
-	vector<Place> places;
-	vector<Customer> customers;
-	vector<Driver> drivers;
-
 	double to_radian(double degree);  //Conversion from degrees to radians
 
 	double distance_between(double x1d, double y1d, double x2d, double y2d);
@@ -155,7 +151,7 @@ namespace funct_lib {
 
 	void request_ride();
 
-	string import_data(string filename;
+	string import_data(string filename);
 
 	void export_data(string filename);
 }

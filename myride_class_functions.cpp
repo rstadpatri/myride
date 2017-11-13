@@ -337,6 +337,9 @@
 				ist >> total;
 				string name;
 				double balance;
+				int photo_loaded;
+				string photo_loc;
+
 				switch (i) {
 				case 0:   //Import places
 					for (int j = 0; j < total; ++j) {
@@ -344,8 +347,12 @@
 						double lat;
 						double lon;
 						string tag;
-						ist >> name >> lat >> lon >> number_tags;
+						ist >> name >> lat >> lon >> number_tags >> photo_loaded;
 						Place new_place{ name, lat, lon };
+						if (photo_loaded != 0) {
+							ist >> photo_loc;
+							new_place.add_photo(photo_loc);
+						}
 						for (int i = 0; i < number_tags; ++i) {
 							ist >> tag;
 							new_place.add_tag(tag);
@@ -357,22 +364,36 @@
 					for (int j = 0; j < total; ++j) {
 						Place loc;
 						string loc_name;
-						ist >> name >> balance >> loc_name;  //Overload this operator
+						ist >> name >> balance >> loc_name >> photo_loaded;  //Overload this operator
 						for (unsigned int i = 0; i < places.size(); ++i) {
 							if (places[i].get_name() == loc_name) {
 								loc = places[i];
 								i = places.size();
 							}
 						}
-						Driver new_driver{ name, loc, balance };
-						drivers.push_back(new_driver);
+						if (photo_loaded == 0) {
+							Driver new_driver{ name, loc, balance };
+							drivers.push_back(new_driver);
+						}
+						else {
+							ist >> photo_loc;
+							Driver new_driver{ name, loc, balance, photo_loc };
+							drivers.push_back(new_driver);
+						}
 					}
 					break;
 				case 2:   //Import customers
 					for (int j = 0; j < total; ++j) {
-						ist >> name >> balance;
-						Customer new_customer{ name, balance };
-						customers.push_back(new_customer);
+						ist >> name >> balance >> photo_loaded;
+						if (photo_loaded == 0) {
+							Customer new_customer{ name, balance };
+							customers.push_back(new_customer);
+						}
+						else {
+							ist >> photo_loc;
+							Customer new_customer{ name, balance, photo_loc };
+							customers.push_back(new_customer);
+						}
 					}
 					break;
 				}

@@ -1,19 +1,19 @@
 8
-CLL College_Station 30.5885 -96.3639 2 airport car_rental
-Central_Park New_York 40.7823 -73.9654 3 park playground restaurant
-Bright_Building College_Station 30.619 -96.3389 2 computer_science aerospace
-Easterwood_Airport College_Station 30.591 -96.3628 2 airport transit
-Buffalo_Wild_Wings College_Station 30.6358 -96.3246 2 dining sports
-UCentre College_Station 30.6254 -96.3461 2 housing pool
-Lake_Bryan Bryan 30.7085 -96.4677 2 lake camping
-Walmart College_Station 30.5974 -96.3005 2 shopping produce
+CLL College_Station 30.5885 -96.3639 2 airport car_rental 0
+Central_Park New_York 40.7823 -73.9654 3 park playground restaurant 0
+Bright_Building College_Station 30.619 -96.3389 2 computer_science aerospace 0
+Easterwood_Airport College_Station 30.591 -96.3628 2 airport transit 0
+Buffalo_Wild_Wings College_Station 30.6358 -96.3246 2 dining sports 0
+UCentre College_Station 30.6254 -96.3461 2 housing pool 0
+Lake_Bryan Bryan 30.7085 -96.4677 2 lake camping 0
+Walmart College_Station 30.5974 -96.3005 2 shopping produce 0
 4
-Jeff_Gordon 20 CLL
-Alain_Prost 100 Lake_Bryan
-Jim 10 Walmart
-Greg 10 UCentre
+Jeff_Gordon 20 CLL 0
+Alain_Prost 100 Lake_Bryan 0
+Jim 10 Walmart 0
+Greg 10 UCentre 0
 4
-Hughey 0
-Dewey 10
-Louie 20
-Terry 0
+Hughey 0 0
+Dewey 10 0 
+Louie 20 0
+Terry 0 0
