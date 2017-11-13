@@ -22,9 +22,9 @@ private:
 	//widgets:
 	Menu first_menu;
 	Button quit_button;
-	Button add_customer;
-	Button add_driver;
-	Button add_place;
+	Button add_customer_button;
+	Button add_driver_button;
+	Button add_place_button;
 	Button add_submit;
 	In_box add_name;
 	In_box add_balance;
@@ -35,6 +35,8 @@ private:
 	In_box add_photo_loc;
 	Out_box add_type;
 
+	char add_indicator;
+
 
 	//function members
 	void hide_menu() {
@@ -44,15 +46,17 @@ private:
 	void add_pressed() {
 		//add menu here
 		hide_menu();
-		add_customer.show();
-		add_driver.show();
-		add_place.show();
+		add_customer_button.show();
+		add_driver_button.show();
+		add_place_button.show();
 	}
 
 	void add_customer_pressed() {
-		add_customer.hide();
-		add_driver.show();
-		add_place.show();
+		add_indicator = 'c';
+
+		add_customer_button.hide();
+		add_driver_button.show();
+		add_place_button.show();
 		add_name.show();
 		add_balance.show();
 		add_driver_place.hide();
@@ -63,9 +67,11 @@ private:
 	}
 
 	void add_driver_pressed() {
-		add_customer.show();
-		add_driver.hide();
-		add_place.show();
+		add_indicator = 'd';
+
+		add_customer_button.show();
+		add_driver_button.hide();
+		add_place_button.show();
 		add_name.show();
 		add_balance.show();
 		add_driver_place.show();
@@ -76,9 +82,11 @@ private:
 	}
 
 	void add_place_pressed() {
-		add_customer.show();
-		add_driver.show();
-		add_place.hide();
+		add_indicator = 'p';
+
+		add_customer_button.show();
+		add_driver_button.show();
+		add_place_button.hide();
 		add_name.show();
 		add_balance.hide();
 		add_driver_place.hide();
@@ -89,9 +97,9 @@ private:
 	}
 
 	void add_submit_pressed() {
-		add_customer.hide();
-		add_driver.hide();
-		add_place.hide();
+		add_customer_button.hide();
+		add_driver_button.hide();
+		add_place_button.hide();
 		add_name.hide();
 		add_balance.hide();
 		add_driver_place.hide();
@@ -99,6 +107,37 @@ private:
 		add_lon.hide();
 		add_tags.hide();
 		add_photo_loc.hide();
+
+		string name = add_name.get_string();
+		string photo_loc = add_photo_loc.get_string();
+		double balance;
+		stringstream convert;
+		Place loc{};
+		string place_name;
+
+		switch (add_indicator) {
+		case 'c':
+			double balance;
+			convert << add_balance.get_string();
+			convert >> balance;
+			add_customer(name, balance, photo_loc);
+
+		case 'd':
+			double balance;
+			convert << add_balance.get_string();
+			convert >> balance;
+			place_name = add_driver_place.get_string();
+			for (unsigned int i = 0; i < places.size(); ++i) {
+				if (places[i].get_name() == place_name) {
+					places[i];
+					i = places.size();
+				}
+			}
+
+		case'p':
+		}
+
+
 	}
 
 	void remove_pressed() {
@@ -151,19 +190,19 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		Menu::vertical,
 		"My Ride"),
 
-	add_customer(
+	add_customer_button(
 		Point(x_max()/4 - 50, 50),
 		100, 40,
 		"Customer",
 		cb_add_customer),
 
-	add_driver(
+	add_driver_button(
 		Point(2*x_max()/4 - 50, 50),
 		100, 40,
 		"Driver",
 		cb_add_driver),
 	
-	add_place(
+	add_place_button(
 		Point(3*x_max()/4 - 50, 50),
 		100, 40,
 		"Place",
@@ -219,9 +258,9 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	//constructor body
 
 	attach(quit_button);
-	attach(add_customer);
-	attach(add_driver);
-	attach(add_place);
+	attach(add_customer_button);
+	attach(add_driver_button);
+	attach(add_place_button);
 	attach(add_submit);
 	attach(add_name);
 	attach(add_balance);
@@ -232,9 +271,9 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(add_photo_loc);
 	attach(add_type);
 
-	add_customer.hide();
-	add_driver.hide();
-	add_place.hide();
+	add_customer_button.hide();
+	add_driver_button.hide();
+	add_place_button.hide();
 	add_submit.hide();
 	add_name.hide();
 	add_balance.hide();
