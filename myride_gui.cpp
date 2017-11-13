@@ -4,9 +4,11 @@
 #include "GUI.h"
 #include "Window.h"
 #include "std_lib_facilities_4.h"
+#include "myride_class_functions.h"
 
 using namespace Graph_lib;
 using namespace std;
+using namespace funct_lib;
 
 struct User_window : Graph_lib::Window {
 
