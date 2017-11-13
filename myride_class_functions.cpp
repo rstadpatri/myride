@@ -27,109 +27,6 @@
 		return distance;
 	}
 
-	class Member {
-		string name;
-		string photo_loc;
-
-	protected:
-		Member(string s) : name(s) {};
-		Member() {};
-
-	public:
-		string get_name() const { return name; };
-		string get_photo() const { return photo_loc; }
-		void add_photo(string s) {
-			photo_loc = s;
-		}
-		virtual string display() {
-			return "Virtual function error";
-		}
-	};
-
-	class Place : public Member {
-		double lat;
-		double lon;
-		vector<string> tags;
-
-	public:
-		Place(string n, double lat, double lon)
-			: Member(n), lat(lat), lon(lon) {}
-
-		Place() {}
-
-		double get_latitude() const { return lat; }
-		double get_longitude() const { return lon; }
-		int get_tags_length() const { return tags.size(); }
-
-		vector<string> get_tags() const { return tags; }
-
-		void add_tag(string s) {
-			tags.push_back(s);
-		}
-
-		void print() {};  // Define for GUI
-
-		string display() {
-			string for_display;
-			for_display = get_name() + "\n";
-			for (unsigned int i = 0; i < tags.size(); ++i) {
-				for_display = for_display + tags[i] + " ";
-			}
-			for_display = for_display + "\n" + to_string(lat) + "\n" + to_string(lon) + "\n";
-			return for_display;
-		}
-	};
-
-	class Customer : public Member {
-	private:
-		double balance;
-
-	public:
-		Customer(string n) : Member(n), balance(0) {}
-		Customer(string n, double bal) : Member(n), balance(bal) {};
-
-		double get_balance() const { return balance; }
-		void make_payment(double amount) {
-			balance = balance - amount;
-		}
-		void add_funds(double amount) {
-			balance = balance + amount;
-		}
-
-		string display() {
-			string for_display;
-			for_display = get_name() + "\n"
-				+ to_string(get_balance()) + "\n";
-			return for_display;
-		}
-	};
-
-	class Driver : public Member {
-		Place loc;
-		double balance;
-
-	public:
-		Driver() {};
-		Driver(string name, Place loc) : Member(name), loc(loc), balance(0) {};
-		Driver(string name, Place loc, double balance) : Member(name), loc(loc), balance(balance) {};
-
-		double get_balance() const { return balance; }
-		Place get_place() const { return loc; }
-		void add_funds(double amount) {
-			balance = balance + amount;
-		}
-		void change_place(Place p) {
-			loc = p;
-		}
-
-		string display() {
-			string for_display;
-			for_display = get_name() + "\n" + to_string(balance) + "\n" + loc.get_name()
-				+ "\n" + to_string(loc.get_latitude()) + "\n" + to_string(loc.get_longitude()) + "\n";
-			return for_display;
-		}
-	};
-
 	bool operator==(Driver a, Driver b) {
 		if (a.get_name() == b.get_name()) {
 			return true;
@@ -246,18 +143,9 @@
 		}
 	}
 
-	void add_customer() {
-		string name;
-
-		//cout << "Input the customer's name: "; NEED GUI SUPPORT HERE
-		//cin >> name;
-		//string extra_input;
-		//getline(cin, extra_input);
-		//name += extra_input;
-
-		Customer new_customer{ name };
+	void add_customer(string name, double balance, string photo_loc) {
+		Customer new_customer{ name, balance, photo_loc };
 		customers.push_back(new_customer);
-
 	}
 
 	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
@@ -268,25 +156,11 @@
 		}
 	}
 
-	void add_driver() {
+	void add_driver(string name, double balance, Place loc, string photo_loc) {
 		//Did not error check for proper input types when using cin. Also did not check for in-range latitude and longitude.
 		//Adds a driver to the program; includes name, driver number, and current coordinates
 
-
-		string name;	//NEED GUI SUPPORT HERE
-		Place loc;
-		double balance = 0;									// MAKE THIS A DECLARATION
-		//
-		//cout << "Input the driver's name: ";
-		//cin >> name;
-		//cout << "Input driver's current latitude: ";
-		//cin >> lat;
-		//cout << "Input driver's current longitude: ";
-		//cin >> lon;
-		//cout << "Input driver's starting balance: ";
-		//cin >> balance;
-
-		Driver new_driver{ name, loc, balance };
+		Driver new_driver{ name, loc, balance, photo_loc };
 		drivers.push_back(new_driver);
 	}
 
@@ -455,10 +329,6 @@
 	string import_data() {
 		//Imports data from a file. Function returns string of filename for future overwriting.
 
-		//NEED GUI SUPPORT
-		//cout << "Please enter input filename: ";
-		string filename;
-		//cin >> filename;
 		try {
 			ifstream ist{ filename };
 			if (!ist) error("Can't open data file ", filename);
