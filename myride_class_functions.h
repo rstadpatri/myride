@@ -17,7 +17,7 @@ namespace funct_lib {
 		string photo_loc;
 
 	protected:
-		Member(string s) : name(s) {};
+		Member(string s) : name(s) {/*photo_loc = default_loc*/};
 		Member(string s, string p) : name(s), photo_loc(p) {};
 		Member() {};
 
@@ -151,7 +151,7 @@ namespace funct_lib {
 
 	void request_ride();
 
-	string import_data(string filename);
+	string import_data();
 
 	void export_data(string filename);
 }
