@@ -12,6 +12,22 @@
 
 	namespace funct_lib{
 
+	vector<Place> places;
+	vector<Customer> customers;
+	vector<Driver> drivers;
+
+	vector<Place>& get_places() {
+		return places;
+	}
+
+	vector<Customer>& get_customers() {
+		return customers;
+	}
+
+	vector<Driver>& get_drivers() {
+		return drivers;
+	}
+
 	double to_radian(double degree) {  //Conversion from degrees to radians
 		double radian = degree*pi / 180;
 		return radian;
@@ -40,96 +56,17 @@
 		return ost;
 	}
 
-	void add_place() {
+	void add_place(string name, double lat, double lon, vector<string> tags, string photo_loc) {
 		//Takes in user input and creates a new Place_info object
 		//Unincluded error checking: I did not check to make sure that latitude and longitude were in the appropriate range.
-
-		//I HAVE COMMENTED OUT ALL COUT'S -> REWRITE FOR THE GUI
-
-		string extra_input;  //For places where cin cuts off a string, I store what's leftover in this variable using the getline function
-
-		//cout << "Now enter the latitude of an arbitrary point: \n";
-		//double input_lat;
-		//cin >> input_lat;
-		//cout << "\nEnter the corresponding longitude: \n";
-		//double input_long;
-		//cin >> input_long;
-
-		//cout << "\nWhat is the name of this location? \n";
-		//string input_name;
-		//cin >> input_name;
-		//getline(cin, extra_input);
-		//input_name += extra_input;
-
-		//cout << "\nWhat is the address?\n";
-		//string input_address;
-		//string input_address2;
-		//cin >> input_address;  //Cin cuts off line at first whitespace
-		//getline(cin, extra_input);
-		//input_address += extra_input;
-
-		//cout << "\nGive the location two tags...\nTag 1:";
-		//string input_tag1;
-		//cin >> input_tag1;
-		//cout << "\nTag 2:";
-		//string input_tag2;
-		//cin >> input_tag2;
-
-		//Constructor with info taken in with GUI
-		//Place arbitrary_loc{ input_name, input_lat, input_long };  
-
-		//arbitrary_loc.add_tag(input_tag1);
-		//arbitrary_loc.add_tag(input_tag2);
-
-		//places.push_back(arbitrary_loc);
+		Place new_place{ name, lat, lon, tags, photo_loc };
+		places.push_back(new_place);
 	}
 
 	double find_distance(Place x, Place y) {  //Essentially a more user friendly distance_between function, takes Place_info as an input.
 		double distance = distance_between(x.get_latitude(), x.get_longitude(), y.get_latitude(), y.get_longitude());
 		return distance;
 	}
-
-	//void initialize_places() {  //Creates a list of landmarks to begin program
-	//	Geo_loc brightloc{ "Bright Building", 30.6190, -96.3389 };
-	//	Place_info bright{ "Bright_Building", "College_Station", brightloc };
-	//	bright.tags.push_back("computer_science");
-	//	bright.tags.push_back("aerospace");
-	//
-	//	Geo_loc airportloc{ "Easterwood Airport", 30.5910, -96.3628 };
-	//	Place_info airport{ "Easterwood_Airport", "College_Station", airportloc };
-	//	airport.tags.push_back("airport");
-	//	airport.tags.push_back("transit");
-	//
-	//	Geo_loc bwwloc{ "Buffalo Wild Wings", 30.6358, -96.3246 };
-	//	Place_info bww{ "Buffalo_Wild_Wings", "College_Station", bwwloc };
-	//	bww.tags.push_back("dining");
-	//	bww.tags.push_back("sports");
-	//
-	//	Geo_loc ucloc{ "UCentre", 30.6254, -96.3461 };
-	//	Place_info uc{ "UCentre", "College_Station", ucloc };
-	//	uc.tags.push_back("housing");
-	//	uc.tags.push_back("pool");
-	//
-	//	Geo_loc lbloc{ "Lake Bryan", 30.7085, -96.4677 };
-	//	Place_info lb{ "Lake_Bryan", "Bryan", lbloc};
-	//	lb.tags.push_back("lake");
-	//	lb.tags.push_back("camping");
-	//
-	//	Geo_loc walloc{ "Walmart", 30.5974, -96.3005 };
-	//	Place_info wal{ "Walmart", "College_Station", walloc };
-	//	wal.tags.push_back("shopping");
-	//	wal.tags.push_back("produce");
-	//
-	//	Place_info v[6] = { bright, airport, bww, uc, lb, wal };  //Use array to place data into a single vector as requested by homework.
-	//	for (int i = 0; i < 6; ++i) { places.push_back(v[i]); }; // I didn't want to write "pushback" and "print" 7 times each so I quickly checked the textbook on using arrays.
-	//
-	//	Driver jim{ "Jim", places[0].loc, 10 };  //Adds a couple of drivers to the program for starting purposes (leftover from HW3)
-	//	drivers.push_back(jim);
-	//	Driver greg{ "Greg", places[0].loc, 10 };
-	//	drivers.push_back(greg);
-	//	Customer terry{ "Terry" };
-	//	customers.push_back(terry);
-	//}
 
 	void add_funds(double addend) {
 		//Adds funds (only works for customer accounts)
@@ -182,8 +119,8 @@
 		//getline(cin, extra_input);
 		//location += extra_input;
 		if (location == "Other") { //Did not error check for improper input. User must enter one of the options verbatim
-			add_place();
-			ordest.push_back(places.back());
+//			add_place();
+//			ordest.push_back(places.back());
 		}
 
 		else {
@@ -208,8 +145,8 @@
 			getline(cin, extra_input);
 			location += extra_input;
 			if (location == "Other") {
-				add_place();
-				ordest.push_back(places.back());
+//				add_place();
+//				ordest.push_back(places.back());
 			}
 			else {
 				for (unsigned int i = 0; i < places.size(); ++i) {

@@ -69,6 +69,7 @@ private:
 		add_lon.hide();
 		add_tags.hide();
 		add_photo_loc.show();
+		add_submit.show();
 	}
 
 	void add_driver_pressed() {
@@ -84,6 +85,7 @@ private:
 		add_lon.hide();
 		add_tags.hide();
 		add_photo_loc.show();
+		add_submit.show();
 	}
 
 	void add_place_pressed() {
@@ -99,6 +101,7 @@ private:
 		add_lon.show();
 		add_tags.show();
 		add_photo_loc.show();
+		add_submit.show();
 	}
 
 	void add_submit_pressed() {
@@ -117,32 +120,45 @@ private:
 		string photo_loc = add_photo_loc.get_string();
 		double balance;
 		stringstream convert;
-		Place loc{};
+		Place loc;
 		string place_name;
+		vector<string> tags;
+		string hold;
+		vector<Place> places = get_places();
 
 		switch (add_indicator) {
 		case 'c':
-			double balance;
 			convert << add_balance.get_string();
 			convert >> balance;
 			add_customer(name, balance, photo_loc);
 
 		case 'd':
-			double balance;
 			convert << add_balance.get_string();
 			convert >> balance;
 			place_name = add_driver_place.get_string();
 			for (unsigned int i = 0; i < places.size(); ++i) {
 				if (places[i].get_name() == place_name) {
-					places[i];
+					loc = places[i];
 					i = places.size();
 				}
 			}
+			add_driver(name, balance, loc, photo_loc);
 
 		case'p':
+			double lat;
+			double lon;
+
+			convert << add_lat.get_string();
+			convert >> lat;
+			convert << add_lon.get_string();
+			convert >> lon; 
+			convert.str(add_tags.get_string());
+			while (!(convert.eof())) {
+				convert >> hold;
+				tags.push_back(hold);
+			}
+			add_place(name, lat, lon, tags, photo_loc);
 		}
-
-
 	}
 
 	void remove_pressed() {
@@ -233,18 +249,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		Menu::vertical,
 		"My Ride"),
 
-<<<<<<< HEAD
 	add_customer_button(
-		Point(x_max()/4 - 50, 50),
-=======
-	add_customer(
 		Point(x_max() / 4 - 50, 50),
->>>>>>> 3560bb87a2c00aaf5fe6b5d42016714719a8a59d
 		100, 40,
 		"Customer",
 		cb_add_customer),
 
-<<<<<<< HEAD
 	add_driver_button(
 		Point(2*x_max()/4 - 50, 50),
 		100, 40,
@@ -253,16 +263,6 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	
 	add_place_button(
 		Point(3*x_max()/4 - 50, 50),
-=======
-	add_driver(
-		Point(2 * x_max() / 4 - 50, 50),
-		100, 40,
-		"Driver",
-		cb_add_driver),
-
-	add_place(
-		Point(3 * x_max() / 4 - 50, 50),
->>>>>>> 3560bb87a2c00aaf5fe6b5d42016714719a8a59d
 		100, 40,
 		"Place",
 		cb_add_place),

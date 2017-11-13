@@ -3,14 +3,12 @@
 
 #ifndef LOGIC_FUNCTIONS
 #define LOGIC_FUNCTIONS
-
 namespace funct_lib {
 
 	double to_radian(double degree);  //Conversion from degrees to radians
 
 	double distance_between(double x1d, double y1d, double x2d, double y2d);
 		// Formula for calculating distance between waypoints
-
 
 	class Member {
 		string name;
@@ -52,6 +50,13 @@ namespace funct_lib {
 
 		Place(string n, double lat, double lon, string photo_loc)
 			: Member(n, photo_loc), lat(lat), lon(lon) {}
+
+		Place(string n, double lat, double lon, vector<string> tags, string photo_loc)
+			: Member(n, photo_loc), lat(lat), lon(lon) {
+			for (unsigned int i = 0; i < tags.size(); ++i) {
+				add_tag(tags[i]);
+			}
+			}
 
 		Place() {}
 
@@ -131,18 +136,15 @@ namespace funct_lib {
 		}
 	};
 
-
-	vector<Place> places;
-	vector<Customer> customers;
-	vector<Driver> drivers;
+	vector<Place>& get_places();
+	vector<Customer>& get_customers();
+	vector<Driver>& get_drivers();
 
 	bool operator==(Driver a, Driver b);
 
-	void add_place();
+	void add_place(string name, double lat, double lon, vector<string> tags, string photo_loc);
 
 	double find_distance(Place x, Place y);  //Essentially a more user friendly distance_between function, takes Place_info as an input.
-
-	//void initialize_places();
 
 	void add_funds(double addend);
 
