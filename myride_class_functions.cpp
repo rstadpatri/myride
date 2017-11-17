@@ -263,11 +263,11 @@
 		//	<< ".\nAnd " << designated_customer.name << "'s account has been charged $" << distance << ".\n";  //Summary of transaction
 	}
 
-	string import_data() {
+	void import_data() {
 		//Imports data from a file. Function returns string of filename for future overwriting.
 
 		try {
-			ifstream ist{ filename };
+			ifstream ist{ "Data File" };
 			if (!ist) error("Can't open data file ", filename);
 			for (unsigned int i = 0; i < 3; ++i) {
 				int total;
@@ -284,15 +284,16 @@
 						double lat;
 						double lon;
 						string tag;
-						ist >> name >> lat >> lon >> number_tags >> photo_loaded;
+						ist >> name >> lat >> lon >> number_tags;
 						Place new_place{ name, lat, lon };
-						if (photo_loaded != 0) {
-							ist >> photo_loc;
-							new_place.add_photo(photo_loc);
-						}
 						for (int i = 0; i < number_tags; ++i) {
 							ist >> tag;
 							new_place.add_tag(tag);
+						}
+						ist >> photo_loaded;
+						if (photo_loaded != 0) {
+							ist >> photo_loc;
+							new_place.add_photo(photo_loc);
 						}
 						places.push_back(new_place);
 					}
@@ -335,20 +336,20 @@
 					break;
 				}
 			}
-			return filename;
+			return;
 		}
 		catch (runtime_error e) {
 			cerr << e.what();
 			cout << "\n";
 			keep_window_open("x");
-			return "null";
+			return;
 		}
-
 	}
 
 	void export_data() {
 		//Simply writes all information back out to file in the proper format.
 		//If improper filename was given, info is written to file name "null"
+
 		try {
 			ofstream ost{ filename };
 			if (!ost) error("Can't open output file ", filename);
@@ -373,7 +374,7 @@
 			ost << customers.size() << "\n";
 			for (unsigned int i = 0; i < customers.size(); ++i) {
 				ost << customers[i].get_name() << " " << customers[i].get_balance() << " " 
-					<< drivers[i].export_photo() << "\n";
+					<< customers[i].export_photo() << "\n";
 			}
 		}
 		catch (runtime_error e) {

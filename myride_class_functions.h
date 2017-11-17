@@ -30,12 +30,13 @@ namespace funct_lib {
 			return "Virtual function error";
 		}
 		string export_photo() {
-			string to_print = name + " ";
+			string to_print = " ";
 			if (photo_added) {
 				to_print += "1 " + photo_loc;
 			}
 			else
 				to_print += "0";
+			return to_print;
 		}
 	};
 
@@ -162,7 +163,7 @@ namespace funct_lib {
 
 	void request_ride();
 
-	string import_data();
+	void import_data();
 
 	void export_data();
 }

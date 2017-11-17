@@ -214,7 +214,10 @@ private:
 		first_menu.show();
 	}
 
-	void quit();
+	void quit() {
+		export_data();
+		hide();
+	};
 
 	//callback functions
 	static void cb_add(Address, Address);
@@ -395,9 +398,6 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 void User_window::cb_quit(Address, Address pw) {
 	reference_to<User_window>(pw).quit();
 }
-void User_window::quit() {
-	hide();
-}
 
 void User_window::cb_add(Address, Address pw) {
 	reference_to<User_window>(pw).add_pressed();
@@ -453,6 +453,7 @@ void User_window::cb_menu(Address, Address pw) {
 
 int main() {
 	try {
+		import_data();
 		User_window win(Point(100, 100), 600, 600, "My Ride");
 		return gui_main();
 	}
