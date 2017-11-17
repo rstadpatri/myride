@@ -39,6 +39,10 @@ private:
 	Button remove_place;
 	Button remove_submit;
 	In_box remove_name;
+	In_box request_placeA_name;
+	In_box request_customer_name;
+	In_box request_placeB_name;
+	//Out_box request_info;
 
 	char add_indicator;
 
@@ -151,7 +155,7 @@ private:
 			convert << add_lat.get_string();
 			convert >> lat;
 			convert << add_lon.get_string();
-			convert >> lon; 
+			convert >> lon;
 			convert.str(add_tags.get_string());
 			while (!(convert.eof())) {
 				convert >> hold;
@@ -201,7 +205,9 @@ private:
 	}
 
 	void request_pressed() {
-		//request menu here
+		request_placeA_name.show();
+		request_placeB_name.show();
+		request_customer_name.show();
 		hide_menu();
 	}
 
@@ -259,13 +265,13 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		cb_add_customer),
 
 	add_driver_button(
-		Point(2*x_max()/4 - 50, 50),
+		Point(2 * x_max() / 4 - 50, 50),
 		100, 40,
 		"Driver",
 		cb_add_driver),
-	
+
 	add_place_button(
-		Point(3*x_max()/4 - 50, 50),
+		Point(3 * x_max() / 4 - 50, 50),
 		100, 40,
 		"Place",
 		cb_add_place),
@@ -343,7 +349,25 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	remove_name(
 		Point(x_max() / 2 - 50, 100),
 		100, 20,
-		"Name:")
+		"Name:"),
+
+	request_placeA_name(
+		Point(x_max() / 2 - 50, 120),
+		100, 20,
+		"Place A:"
+	),
+
+	request_customer_name(
+		Point(x_max() / 2 - 50, 100),
+		100, 20,
+		"Customer Name:"
+	),
+
+	request_placeB_name(
+		Point(x_max() / 2 - 50, 140),
+		100, 20,
+		"Place B:"
+	)
 
 {
 	//constructor body
@@ -366,6 +390,9 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(remove_place);
 	attach(remove_submit);
 	attach(remove_name);
+	attach(request_placeA_name);
+	attach(request_placeB_name);
+	attach(request_customer_name);
 
 
 	add_customer_button.hide();
@@ -385,6 +412,9 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	remove_place.hide();
 	remove_submit.hide();
 	remove_name.hide();
+	request_placeA_name.hide();
+	request_placeB_name.hide();
+	request_customer_name.hide();
 
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
@@ -440,7 +470,7 @@ void User_window::cb_remove_submit(Address, Address pw) {
 }
 
 void User_window::cb_request(Address, Address pw) {
-	//reference to request pressed
+	reference_to<User_window>(pw).request_pressed();
 }
 
 void User_window::cb_display(Address, Address pw) {
