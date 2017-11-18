@@ -59,8 +59,16 @@
 	void add_place(string name, double lat, double lon, vector<string> tags, string photo_loc) {
 		//Takes in user input and creates a new Place_info object
 		//Unincluded error checking: I did not check to make sure that latitude and longitude were in the appropriate range.
-		Place new_place{ name, lat, lon, tags, photo_loc };
-		places.push_back(new_place);
+		
+		if (photo_loc == "") {
+			Place new_place{ name, lat, lon, tags };
+			places.push_back(new_place);
+		}
+		else {
+			Place new_place{ name, lat, lon, tags, photo_loc };
+			places.push_back(new_place);
+		}
+
 	}
 
 	double find_distance(Place x, Place y) {  //Essentially a more user friendly distance_between function, takes Place_info as an input.
@@ -81,8 +89,14 @@
 	}
 
 	void add_customer(string name, double balance, string photo_loc) {
-		Customer new_customer{ name, balance, photo_loc };
-		customers.push_back(new_customer);
+		if (photo_loc == "") {
+			Customer new_customer{ name, balance };
+			customers.push_back(new_customer);
+		}
+		else {
+			Customer new_customer{ name, balance, photo_loc };
+			customers.push_back(new_customer);
+		}
 	}
 
 	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
@@ -97,11 +111,17 @@
 		//Did not error check for proper input types when using cin. Also did not check for in-range latitude and longitude.
 		//Adds a driver to the program; includes name, driver number, and current coordinates
 
-		Driver new_driver{ name, loc, balance, photo_loc };
-		drivers.push_back(new_driver);
+		if (photo_loc == "") {
+			Driver new_driver{ name, loc, balance };
+			drivers.push_back(new_driver);
+		}
+		else {
+			Driver new_driver{ name, loc, balance, photo_loc };
+			drivers.push_back(new_driver);
+		}
 	}
 
-	vector<Place> ride_ordest() {
+	vector<Place> ride_ordest(string location, int nametag, string destination_tag) {
 		//Returns Place vector with ride origin and destination
 		string extra_input;
 
@@ -113,62 +133,35 @@
 		//}
 		//cout << "Other\n\nEnter name: ";
 
-		string location;
-		string tag;
 		//cin >> location;
 		//getline(cin, extra_input);
 		//location += extra_input;
-		if (location == "Other") { //Did not error check for improper input. User must enter one of the options verbatim
-//			add_place();
-//			ordest.push_back(places.back());
-		}
 
-		else {
-			for (unsigned int i = 0; i < places.size(); ++i) {
-				if (location == places[i].get_name()) {
-					ordest.push_back(places[i]);
-				}
+
+		for (unsigned int i = 0; i < places.size(); ++i) {
+			if (location == places[i].get_name()) {
+				ordest.push_back(places[i]);
 			}
 		}
 
-		//NEED GUI SUPPORT
-		//cout << "\nWhere are you going? Would you like to enter a location name or tag?\n\n1 - name\n2 - tag\n";
-		int nametag = 1;
-		//cin >> nametag;
 		switch (nametag) {  //Switch case for entering either a tag or a name of a location
+		
 		case 1:
-			for (unsigned int i = 0; i < places.size(); ++i) {  //Gives options to choose from
-				cout << places[i].get_name() << "\n";
-			}
-			cout << "Other\n\n";
-			cin >> location;
-			getline(cin, extra_input);
-			location += extra_input;
-			if (location == "Other") {
-//				add_place();
-//				ordest.push_back(places.back());
-			}
-			else {
-				for (unsigned int i = 0; i < places.size(); ++i) {
-					if (location == places[i].get_name()) {
-						ordest.push_back(places[i]);
-					}
+			for (unsigned int i = 0; i < places.size(); ++i) {
+				if (destination_tag == places[i].get_name()) {
+					ordest.push_back(places[i]);
 				}
 			}
 			break;
+
 		case 2:
-			for (unsigned int i = 0; i < places.size(); ++i) {
-				places[i].print();
-			}
-			//cin >> tag;
-			//getline(cin, extra_input);
-			//tag += extra_input;
-			for (unsigned int i = 0; i < places.size(); ++i) {
-				vector<string> tags = places[i].get_tags();
-				if ((tag == tags[0]) || (tag == tags[1])) {
-					ordest.push_back(places[i]);
-				}
-			}
+
+			//for (unsigned int i = 0; i < places.size(); ++i) {
+			//	vector<string> tags = places[i].get_tags();
+			//	if ((tag == tags[0]) || (tag == tags[1])) {
+			//		ordest.push_back(places[i]);
+			//	}
+			//}
 			break;
 		default:
 			break;
@@ -233,14 +226,10 @@
 		return eligible_drivers;
 	}
 
-	void request_ride() {
+	string request_ride(string customer_name, string location, int nametag, string destination_tag) {
 		//Finds driver, finds distance, credits driver account, changes driver's location, debits customer account, prints summary
 
-		string customer_name;
-		cout << "Enter your name: ";
-		cin >> customer_name;
-
-		vector<Place> ordest = ride_ordest();  // Returns vector with origin and destination
+		vector<Place> ordest = ride_ordest(location, nametag, destination_tag);  // Returns vector with origin and destination
 		Driver designated_driver = find_driver(ordest); //Returns driver with closest driver
 
 		double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
@@ -255,12 +244,27 @@
 			}
 		}
 
-		return;
+		//Summary of transaction
 
-		//Summary of transaction -- NEED GUI SUPPORT
-		//cout << "\n" << drivers[designated_driver].name << " has driven " << designated_customer.name << " from " << ordest[0].name << " to "
-		//	<< ordest[1].name << ".\n" << drivers[designated_driver].name << "'s account has been credited with $" << fixed << setprecision(2) << distance / 2
-		//	<< ".\nAnd " << designated_customer.name << "'s account has been charged $" << distance << ".\n";  //Summary of transaction
+		stringstream sm;
+		string dist;
+		sm << fixed << setprecision(2);
+		sm << distance;
+		sm >> dist;
+		sm.clear();
+
+		string halfdist;
+		sm << distance / 2;
+		sm >> halfdist;
+
+		string summary = "\n" + designated_driver.get_name() + " has driven " 
+			+ designated_customer.get_name() + " from " + ordest[0].get_name() + " to "
+			+ ordest[1].get_name() + ".\n" + designated_driver.get_name() 
+			+ "'s account has been credited with $" + halfdist + ".\nAnd " 
+			+ designated_customer.get_name() + "'s account has been charged $" 
+			+ dist + ".\n";
+
+		return summary;
 	}
 
 	void import_data() {

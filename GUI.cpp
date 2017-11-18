@@ -6,7 +6,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Output.H>
+#include <FL/Fl_Multiline_Output.H>
 #include "GUI.h"
 
 namespace Graph_lib {
@@ -51,14 +51,14 @@ void In_box::attach(Window& win)
 
 void Out_box::put(const string& s)
 {
-    reference_to<Fl_Output>(pw).value(s.c_str());
+    reference_to<Fl_Multiline_Output>(pw).value(s.c_str());
 }
 
 //------------------------------------------------------------------------------
 
 void Out_box::attach(Window& win)
 {
-    pw = new Fl_Output(loc.x, loc.y, width, height, label.c_str());
+    pw = new Fl_Multiline_Output(loc.x, loc.y, width, height, label.c_str());
     own = &win;
 }
 

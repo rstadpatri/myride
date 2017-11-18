@@ -42,7 +42,10 @@ private:
 	In_box request_placeA_name;
 	In_box request_customer_name;
 	In_box request_placeB_name;
-	//Out_box request_info;
+	Out_box request_info;
+	Button request_submit;
+	Out_box request_summary;
+	Button request_okay;
 
 	char add_indicator;
 
@@ -50,6 +53,10 @@ private:
 	//function members
 	void hide_menu() {
 		first_menu.hide();
+	}
+
+	void show_menu() {
+		first_menu.show();
 	}
 
 	void add_pressed() {
@@ -119,6 +126,7 @@ private:
 		add_lon.hide();
 		add_tags.hide();
 		add_photo_loc.hide();
+		add_submit.hide();
 
 		string name = add_name.get_string();
 		string photo_loc = add_photo_loc.get_string();
@@ -128,14 +136,14 @@ private:
 		string place_name;
 		vector<string> tags;
 		string hold;
-		vector<Place> places = get_places();
+		vector<Place>& places = get_places();
 
 		switch (add_indicator) {
 		case 'c':
 			convert << add_balance.get_string();
 			convert >> balance;
 			add_customer(name, balance, photo_loc);
-
+			break;
 		case 'd':
 			convert << add_balance.get_string();
 			convert >> balance;
@@ -147,22 +155,27 @@ private:
 				}
 			}
 			add_driver(name, balance, loc, photo_loc);
-
+			break;
 		case'p':
 			double lat;
 			double lon;
 
 			convert << add_lat.get_string();
 			convert >> lat;
+			convert.clear();
 			convert << add_lon.get_string();
 			convert >> lon;
-			convert.str(add_tags.get_string());
+			convert.clear();
+			convert << add_tags.get_string();
 			while (!(convert.eof())) {
 				convert >> hold;
 				tags.push_back(hold);
 			}
 			add_place(name, lat, lon, tags, photo_loc);
+			break;
 		}
+
+		show_menu();
 	}
 
 	void remove_pressed() {
@@ -208,7 +221,42 @@ private:
 		request_placeA_name.show();
 		request_placeB_name.show();
 		request_customer_name.show();
+
+		vector<Place>& places = get_places();
+		string place_list;
+		for (int i = 0; i < places.size(); ++i) {
+			place_list += places[i].get_name() + " : "
+				+ places[i].display_tags() + "\n";
+		}
+		request_info.put(place_list);
+		request_info.show();
+		request_submit.show();
+		
 		hide_menu();
+	}
+
+	void request_submit_pressed() {
+		request_placeA_name.hide();
+		request_placeB_name.hide();
+		request_customer_name.hide();
+		request_info.hide();
+		request_submit.hide();
+
+		string loc_name = request_placeA_name.get_string();
+		string customer_name = request_customer_name.get_string();
+		string dest_name = request_placeB_name.get_string();
+		
+		string summary = request_ride(customer_name, loc_name, 1, dest_name);
+
+		request_summary.show();
+		request_summary.put(summary);
+		request_okay.show();
+	}
+
+	void request_okay_pressed() {
+		request_summary.hide();
+		request_okay.hide();
+		show_menu();
 	}
 
 	void display_presed() {
@@ -240,134 +288,155 @@ private:
 	static void cb_remove_driver(Address, Address);
 	static void cb_remove_place(Address, Address);
 	static void cb_remove_submit(Address, Address);
+	static void cb_request_submit(Address, Address);
+	static void cb_request_okay(Address, Address);
 };
 
 User_window::User_window(Point xy, int w, int h, const string& title) :
 	//initialization
 	Window(xy, w, h, title),
 
-	quit_button(
-		Point(x_max() / 2 - 50, 5 * y_max() / 6 - 20),
-		100, 40,
-		"Quit",
-		cb_quit),
+		quit_button(
+			Point(x_max() / 2 - 50, y_max() - 40),
+			100, 40,
+			"Quit",
+			cb_quit),
 
-	first_menu(
-		Point(x_max() / 2 - 50, y_max() / 6),
-		100, 40,
-		Menu::vertical,
-		"My Ride"),
+		first_menu(
+			Point(x_max() / 2 - 50, y_max() / 6),
+			100, 40,
+			Menu::vertical,
+			"My Ride"),
 
-	add_customer_button(
-		Point(x_max() / 4 - 50, 50),
-		100, 40,
-		"Customer",
-		cb_add_customer),
+		add_customer_button(
+			Point(x_max() / 4 - 50, 50),
+			100, 40,
+			"Customer",
+			cb_add_customer),
 
-	add_driver_button(
-		Point(2 * x_max() / 4 - 50, 50),
-		100, 40,
-		"Driver",
-		cb_add_driver),
+		add_driver_button(
+			Point(2 * x_max() / 4 - 50, 50),
+			100, 40,
+			"Driver",
+			cb_add_driver),
 
-	add_place_button(
-		Point(3 * x_max() / 4 - 50, 50),
-		100, 40,
-		"Place",
-		cb_add_place),
+		add_place_button(
+			Point(3 * x_max() / 4 - 50, 50),
+			100, 40,
+			"Place",
+			cb_add_place),
 
-	add_submit(
-		Point(x_max() - 100, y_max() - 80),
-		100, 40,
-		"Submit",
-		cb_add_submit),
+		add_submit(
+			Point(x_max() - 100, y_max() - 40),
+			100, 40,
+			"Submit",
+			cb_add_submit),
 
-	add_name(
-		Point(x_max() / 2 - 50, 100),
-		100, 20,
-		"Name:"),
+		add_name(
+			Point(x_max() / 2 - 50, 100),
+			100, 20,
+			"Name:"),
 
-	add_balance(
-		Point(x_max() / 2 - 50, 130),
-		100, 20,
-		"Balance:"),
+		add_balance(
+			Point(x_max() / 2 - 50, 130),
+			100, 20,
+			"Balance:"),
 
-	add_driver_place(
-		Point(x_max() / 2 - 50, 160),
-		100, 20,
-		"Place:"),
+		add_driver_place(
+			Point(x_max() / 2 - 50, 160),
+			100, 20,
+			"Place:"),
 
-	add_lat(
-		Point(x_max() / 2 - 50, 190),
-		100, 20,
-		"Latitude:"),
+		add_lat(
+			Point(x_max() / 2 - 50, 190),
+			100, 20,
+			"Latitude:"),
 
-	add_lon(
-		Point(x_max() / 2 - 50, 220),
-		100, 20,
-		"Longitude:"),
+		add_lon(
+			Point(x_max() / 2 - 50, 220),
+			100, 20,
+			"Longitude:"),
 
-	add_tags(
-		Point(x_max() / 2 - 50, 250),
-		200, 20,
-		"Tags:"),
+		add_tags(
+			Point(x_max() / 2 - 50, 250),
+			200, 20,
+			"Tags:"),
 
-	add_photo_loc(
-		Point(x_max() / 2 - 50, 280),
-		100, 20,
-		"Photo filename:"),
+		add_photo_loc(
+			Point(x_max() / 2 - 50, 280),
+			100, 20,
+			"Photo filename:"),
 
-	add_type(
-		Point(x_max() - 100, y_max() - 100),
-		100, 20,
-		"Selected Type:"),
+		add_type(
+			Point(x_max() - 100, y_max() - 100),
+			100, 20,
+			"Selected Type:"),
 
-	remove_customer(
-		Point(x_max() / 4 - 50, 50),
-		100, 40,
-		"Customer",
-		cb_remove_customer),
+		remove_customer(
+			Point(x_max() / 4 - 50, 50),
+			100, 40,
+			"Customer",
+			cb_remove_customer),
 
-	remove_driver(
-		Point(2 * x_max() / 4 - 50, 50),
-		100, 40,
-		"Driver",
-		cb_remove_driver),
+		remove_driver(
+			Point(2 * x_max() / 4 - 50, 50),
+			100, 40,
+			"Driver",
+			cb_remove_driver),
 
-	remove_place(
-		Point(3 * x_max() / 4 - 50, 50),
-		100, 40,
-		"Place",
-		cb_remove_place),
+		remove_place(
+			Point(3 * x_max() / 4 - 50, 50),
+			100, 40,
+			"Place",
+			cb_remove_place),
 
-	remove_submit(
-		Point(x_max() - 100, y_max() - 80),
-		100, 40,
-		"Submit",
-		cb_remove_submit),
+		remove_submit(
+			Point(x_max() - 100, y_max() - 80),
+			100, 40,
+			"Submit",
+			cb_remove_submit),
 
-	remove_name(
-		Point(x_max() / 2 - 50, 100),
-		100, 20,
-		"Name:"),
+		remove_name(
+			Point(x_max() / 2 - 50, 100),
+			100, 20,
+			"Name:"),
 
-	request_placeA_name(
-		Point(x_max() / 2 - 50, 120),
-		100, 20,
-		"Place A:"
-	),
+		request_placeA_name(
+			Point(x_max() / 2 - 100, 70),
+			200, 20,
+			"Place A:"),
 
-	request_customer_name(
-		Point(x_max() / 2 - 50, 100),
-		100, 20,
-		"Customer Name:"
-	),
+		request_customer_name(
+			Point(x_max() / 2 - 100, 40),
+			200, 20,
+			"Customer Name:"),
 
-	request_placeB_name(
-		Point(x_max() / 2 - 50, 140),
-		100, 20,
-		"Place B:"
-	)
+		request_placeB_name(
+			Point(x_max() / 2 - 100, 100),
+			200, 20,
+			"Place B:"),
+
+		request_info(
+			Point(x_max()-(x_max()-100), 130),
+			x_max() - 200, y_max() - 230,
+			"Places  \nand  \ntags: "),
+
+		request_submit(
+			Point(x_max()/2 + 130, 40),
+			100, 80,
+			"Submit",
+			cb_request_submit),
+
+		request_okay(
+			Point(x_max() - 100, y_max() - 40),
+			100, 40,
+			"Okay",
+			cb_request_okay),
+
+		request_summary(
+			Point(x_max() - (x_max()-20), 100),
+			x_max()-40, 300,
+			"")
 
 {
 	//constructor body
@@ -393,6 +462,10 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(request_placeA_name);
 	attach(request_placeB_name);
 	attach(request_customer_name);
+	attach(request_info);
+	attach(request_submit);
+	attach(request_okay);
+	attach(request_summary);
 
 
 	add_customer_button.hide();
@@ -415,6 +488,10 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	request_placeA_name.hide();
 	request_placeB_name.hide();
 	request_customer_name.hide();
+	request_info.hide();
+	request_submit.hide();
+	request_summary.hide();
+	request_okay.hide();
 
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
@@ -471,6 +548,14 @@ void User_window::cb_remove_submit(Address, Address pw) {
 
 void User_window::cb_request(Address, Address pw) {
 	reference_to<User_window>(pw).request_pressed();
+}
+
+void User_window::cb_request_submit(Address, Address pw) {
+	reference_to<User_window>(pw).request_submit_pressed();
+}
+
+void User_window::cb_request_okay(Address, Address pw) {
+	reference_to<User_window>(pw).request_okay_pressed();
 }
 
 void User_window::cb_display(Address, Address pw) {

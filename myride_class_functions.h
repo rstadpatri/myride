@@ -49,6 +49,13 @@ namespace funct_lib {
 		Place(string n, double lat, double lon)
 			: Member(n), lat(lat), lon(lon) {}
 
+		Place(string n, double lat, double lon, vector<string> tags)
+			: Member(n), lat(lat), lon(lon) {
+			for (unsigned int i = 0; i < tags.size(); ++i) {
+				add_tag(tags[i]);
+			}
+		}
+
 		Place(string n, double lat, double lon, string photo_loc)
 			: Member(n, photo_loc), lat(lat), lon(lon) {}
 
@@ -71,8 +78,6 @@ namespace funct_lib {
 			tags.push_back(s);
 		}
 
-		void print() {};  // Define for GUI
-
 		string display() {
 			string for_display;
 			for_display = get_name() + "\n";
@@ -80,6 +85,14 @@ namespace funct_lib {
 				for_display = for_display + tags[i] + " ";
 			}
 			for_display = for_display + "\n" + to_string(lat) + "\n" + to_string(lon) + "\n";
+			return for_display;
+		}
+
+		string display_tags() {
+			string for_display;
+			for (unsigned int i = 0; i < tags.size(); ++i) {
+				for_display = for_display + tags[i] + " ";
+			}
 			return for_display;
 		}
 	};
@@ -155,13 +168,13 @@ namespace funct_lib {
 
 	void add_driver(string name, double balance, Place loc, string photo_loc);
 
-	vector<Place> ride_ordest();
+	vector<Place> ride_ordest(string location, int nametag, string destination_tag);
 
 	Driver find_driver(vector<Place> ordest);
 
 	vector<Driver> find_driver_within(string tag, double radius);
 
-	void request_ride();
+	string request_ride(string customer_name, string location, int nametag, string destination_tag);
 
 	void import_data();
 
