@@ -164,7 +164,7 @@ namespace funct_lib {
 
 	void add_customer(string name, double balance, string photo_loc);
 
-	template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
+	void remove_member(char c, string name); //GUI will need to provide call with different types of classes
 
 	void add_driver(string name, double balance, Place loc, string photo_loc);
 
