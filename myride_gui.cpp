@@ -5,10 +5,12 @@
 #include "Window.h"
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
+#include "display_gui_2_by_2.h"
 
 using namespace Graph_lib;
 using namespace std;
 using namespace funct_lib;
+using namespace disp_lib;
 
 struct User_window : Graph_lib::Window {
 
@@ -48,7 +50,6 @@ private:
 	Button request_okay;
 
 	char add_indicator;
-	char remove_indicator;
 
 
 	//function members
@@ -192,8 +193,6 @@ private:
 		remove_customer.hide();
 		remove_driver.show();
 		remove_place.show();
-
-		remove_indicator = 'c';
 	}
 
 	void remove_driver_pressed() {
@@ -202,8 +201,6 @@ private:
 		remove_customer.show();
 		remove_driver.hide();
 		remove_place.show();
-
-		remove_indicator = 'd';
 	}
 
 	void remove_place_pressed() {
@@ -212,21 +209,14 @@ private:
 		remove_customer.show();
 		remove_driver.show();
 		remove_place.hide();
-
-		remove_indicator = 'p';
 	}
 
 	void remove_submit_pressed() {
-		remove_name.hide();
-		remove_submit.hide();
-		remove_customer.hide();
-		remove_driver.hide();
-		remove_place.hide();
-		show_menu();
-
-		string name = remove_name.get_string();
-
-		remove_member(remove_indicator, name);
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.show();
+		remove_driver.show();
+		remove_place.show();
 	}
 
 	void request_pressed() {
@@ -272,8 +262,8 @@ private:
 	}
 
 	void display_pressed() {
-		//add menu here
-		hide_menu();
+		//Will be hide/show menu for specific display
+		Disp_2 driver2by2 = Disp_2(Point(1000, 100), 1000, 1000, "Drivers", get_drivers());
 	}
 
 	void menu_pressed() {
@@ -403,7 +393,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_remove_place),
 
 		remove_submit(
-			Point(x_max() - 100, y_max() - 40),
+			Point(x_max() - 100, y_max() - 80),
 			100, 40,
 			"Submit",
 			cb_remove_submit),
