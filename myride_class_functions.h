@@ -15,9 +15,9 @@ namespace funct_lib {
 		string photo_loc;
 
 	protected:
-		Member(string s) : name(s), photo_added(false) {/*photo_loc = default_loc*/};
-		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {};
-		Member() {};
+		Member(string s) : name(s), photo_added(false), photo_loc("default.jpg") {}
+		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {}
+		Member() {}
 
 	public:
 		bool photo_added;
