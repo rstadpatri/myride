@@ -271,11 +271,8 @@ private:
 		show_menu();
 	}
 
-<<<<<<< HEAD
-	void display_presed() {
-=======
+
 	void display_pressed() {
->>>>>>> parent of b05db81... Myride with 2x2 implementation
 		//add menu here
 		hide_menu();
 	}
