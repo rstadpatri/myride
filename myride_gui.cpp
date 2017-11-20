@@ -259,7 +259,12 @@ private:
 		show_menu();
 	}
 
+<<<<<<< HEAD
 	void display_presed() {
+=======
+
+	void display_pressed() {
+>>>>>>> parent of 3fcbbf7... Display Menu
 		//add menu here
 		hide_menu();
 	}
@@ -391,7 +396,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_remove_place),
 
 		remove_submit(
-			Point(x_max() - 100, y_max() - 80),
+			Point(x_max() - 100, y_max() - 40),
 			100, 40,
 			"Submit",
 			cb_remove_submit),
