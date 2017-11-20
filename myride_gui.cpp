@@ -49,11 +49,8 @@ private:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 	Button display_customers_all;
 	Button display_customers_neg;
 	Button display_drivers_all;
@@ -63,16 +60,12 @@ private:
 	Menu display_size_menu;
 
 >>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
-<<<<<<< HEAD
 =======
 >>>>>>> parent of 5929cac... added display buttons
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 
 	char add_indicator;
-	char remove_indicator;
 
 
 	//function members
@@ -216,8 +209,6 @@ private:
 		remove_customer.hide();
 		remove_driver.show();
 		remove_place.show();
-
-		remove_indicator = 'c';
 	}
 
 	void remove_driver_pressed() {
@@ -226,8 +217,6 @@ private:
 		remove_customer.show();
 		remove_driver.hide();
 		remove_place.show();
-
-		remove_indicator = 'd';
 	}
 
 	void remove_place_pressed() {
@@ -236,21 +225,14 @@ private:
 		remove_customer.show();
 		remove_driver.show();
 		remove_place.hide();
-
-		remove_indicator = 'p';
 	}
 
 	void remove_submit_pressed() {
-		remove_name.hide();
-		remove_submit.hide();
-		remove_customer.hide();
-		remove_driver.hide();
-		remove_place.hide();
-		show_menu();
-
-		string name = remove_name.get_string();
-
-		remove_member(remove_indicator, name);
+		remove_name.show();
+		remove_submit.show();
+		remove_customer.show();
+		remove_driver.show();
+		remove_place.show();
 	}
 
 	void request_pressed() {
@@ -267,7 +249,7 @@ private:
 		request_info.put(place_list);
 		request_info.show();
 		request_submit.show();
-
+		
 		hide_menu();
 	}
 
@@ -281,7 +263,7 @@ private:
 		string loc_name = request_placeA_name.get_string();
 		string customer_name = request_customer_name.get_string();
 		string dest_name = request_placeB_name.get_string();
-
+		
 		string summary = request_ride(customer_name, loc_name, 1, dest_name);
 
 		request_summary.show();
@@ -298,11 +280,8 @@ private:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 
 			void display_pressed() {
 				//add menu here
@@ -317,7 +296,6 @@ private:
 		display_size_menu.show();
 		hide_menu();
 >>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
-<<<<<<< HEAD
 =======
 	void display_presed() {
 		//add menu here
@@ -325,14 +303,13 @@ private:
 >>>>>>> parent of 5929cac... added display buttons
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 	}
 
-	void display_customers_neg() {
-
+	void menu_pressed() {
+		first_menu.show();
 	}
 
+<<<<<<< HEAD
 	void display_drivers_all() {
 
 	}
@@ -379,6 +356,13 @@ private:
 		Window(xy, w, h, title),
 <<<<<<< HEAD
 =======
+=======
+	void quit() {
+		export_data();
+		hide();
+	};
+
+>>>>>>> parent of 5929cac... added display buttons
 	//callback functions
 	static void cb_add(Address, Address);
 	static void cb_remove(Address, Address);
@@ -396,22 +380,23 @@ private:
 	static void cb_remove_submit(Address, Address);
 	static void cb_request_submit(Address, Address);
 	static void cb_request_okay(Address, Address);
+<<<<<<< HEAD
 	static void cb_2(Address, Address);
 	static void cb_3(Address, Address);
 	static void cb_4(Address, Address);
+=======
+>>>>>>> parent of 5929cac... added display buttons
 };
 
 User_window::User_window(Point xy, int w, int h, const string& title) :
 	//initialization
 	Window(xy, w, h, title),
->>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 <<<<<<< HEAD
+>>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 =======
 >>>>>>> parent of 5929cac... added display buttons
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 
 		quit_button(
 			Point(x_max() / 2 - 50, y_max() - 40),
@@ -508,7 +493,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_remove_place),
 
 		remove_submit(
-			Point(x_max() - 100, y_max() - 40),
+			Point(x_max() - 100, y_max() - 80),
 			100, 40,
 			"Submit",
 			cb_remove_submit),
@@ -534,12 +519,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			"Place B:"),
 
 		request_info(
-			Point(x_max() - (x_max() - 100), 130),
+			Point(x_max()-(x_max()-100), 130),
 			x_max() - 200, y_max() - 230,
 			"Places  \nand  \ntags: "),
 
 		request_submit(
-			Point(x_max() / 2 + 130, 40),
+			Point(x_max()/2 + 130, 40),
 			100, 80,
 			"Submit",
 			cb_request_submit),
@@ -554,11 +539,8 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
 			Point(x_max() - (x_max() - 20), 100),
 			x_max() - 40, 300,
 			""),
@@ -735,6 +717,11 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			100, 40,
 			Menu::vertical,
 			"Select size")
+=======
+			Point(x_max() - (x_max()-20), 100),
+			x_max()-40, 300,
+			"")
+>>>>>>> parent of 5929cac... added display buttons
 
 {
 	//constructor body
@@ -791,12 +778,15 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	request_summary.hide();
 	request_okay.hide();
 
+<<<<<<< HEAD
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "2 x 2", cb_2));
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "3 x 3", cb_3));
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "4 x 4", cb_4));
 	attach(display_size_menu);
 	display_size_menu.hide();
 
+=======
+>>>>>>> parent of 5929cac... added display buttons
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "request", cb_request));
@@ -863,6 +853,7 @@ void User_window::cb_request_okay(Address, Address pw) {
 }
 
 void User_window::cb_display(Address, Address pw) {
+<<<<<<< HEAD
 	reference_to<User_window>(pw).display_pressed();
 }
 
@@ -882,6 +873,11 @@ void User_window::cb_4(Address, Address pw) {
 	// 4x4 display pressed
 }
 
+=======
+	//reference to display pressed
+}
+
+>>>>>>> parent of 5929cac... added display buttons
 void User_window::cb_menu(Address, Address pw) {
 	reference_to<User_window>(pw).menu_pressed();
 }
@@ -897,11 +893,9 @@ int main() {
 		return 1;
 	}
 }
->>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 <<<<<<< HEAD
+>>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 =======
 >>>>>>> parent of 5929cac... added display buttons
 =======
 >>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
-=======
->>>>>>> parent of 821737f... Revert Unnecessary changes
