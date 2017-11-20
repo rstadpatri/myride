@@ -165,6 +165,7 @@ namespace funct_lib {
 	void add_customer(string name, double balance, string photo_loc);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
 	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
 		for (unsigned int i = 0; i < list.size(); ++i) {
@@ -174,6 +175,9 @@ namespace funct_lib {
 		}
 	}
 
+=======
+	void remove_member(char c, string name); //GUI will need to provide call with different types of classes
+>>>>>>> b05db81ffa016cb815c76fe84cf3f9239dd7180d
 =======
 	void remove_member(char c, string name); //GUI will need to provide call with different types of classes
 >>>>>>> b05db81ffa016cb815c76fe84cf3f9239dd7180d
