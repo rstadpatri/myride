@@ -5,10 +5,12 @@
 #include "Window.h"
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
+#include "display_gui_2_by_2.h"
 
 using namespace Graph_lib;
 using namespace std;
 using namespace funct_lib;
+using namespace disp_lib;
 
 struct User_window : Graph_lib::Window {
 
@@ -46,6 +48,8 @@ private:
 	Button request_submit;
 	Out_box request_summary;
 	Button request_okay;
+	Menu display_size_menu;
+
 
 	char add_indicator;
 	char remove_indicator;
@@ -243,7 +247,7 @@ private:
 		request_info.put(place_list);
 		request_info.show();
 		request_submit.show();
-		
+
 		hide_menu();
 	}
 
@@ -257,7 +261,7 @@ private:
 		string loc_name = request_placeA_name.get_string();
 		string customer_name = request_customer_name.get_string();
 		string dest_name = request_placeB_name.get_string();
-		
+
 		string summary = request_ride(customer_name, loc_name, 1, dest_name);
 
 		request_summary.show();
@@ -271,9 +275,8 @@ private:
 		show_menu();
 	}
 
-
 	void display_pressed() {
-		//add menu here
+		display_size_menu.show();
 		hide_menu();
 	}
 
@@ -303,6 +306,9 @@ private:
 	static void cb_remove_submit(Address, Address);
 	static void cb_request_submit(Address, Address);
 	static void cb_request_okay(Address, Address);
+	static void cb_2(Address, Address);
+	static void cb_3(Address, Address);
+	static void cb_4(Address, Address);
 };
 
 User_window::User_window(Point xy, int w, int h, const string& title) :
@@ -404,7 +410,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_remove_place),
 
 		remove_submit(
-			Point(x_max() - 100, y_max() - 40),
+			Point(x_max() - 100, y_max() - 80),
 			100, 40,
 			"Submit",
 			cb_remove_submit),
@@ -449,7 +455,13 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		request_summary(
 			Point(x_max() - (x_max()-20), 100),
 			x_max()-40, 300,
-			"")
+			""),
+
+		display_size_menu(
+			Point(x_max() / 2 - 50, y_max() / 6),
+			100, 40,
+			Menu::vertical,
+			"Select size")
 
 {
 	//constructor body
@@ -505,6 +517,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	request_submit.hide();
 	request_summary.hide();
 	request_okay.hide();
+
+	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "2 x 2", cb_2));
+	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "3 x 3", cb_3));
+	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "4 x 4", cb_4));
+	attach(display_size_menu);
+	display_size_menu.hide();
 
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
 	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
@@ -572,7 +590,23 @@ void User_window::cb_request_okay(Address, Address pw) {
 }
 
 void User_window::cb_display(Address, Address pw) {
+	reference_to<User_window>(pw).display_pressed();
+}
+
+void User_window::cb_display(Address, Address pw) {
 	//reference to display pressed
+}
+
+void User_window::cb_2(Address, Address pw) {
+	// 2x2 display pressed
+}
+
+void User_window::cb_3(Address, Address pw) {
+	// 3x3 display pressed
+}
+
+void User_window::cb_4(Address, Address pw) {
+	// 4x4 display pressed
 }
 
 void User_window::cb_menu(Address, Address pw) {
