@@ -289,6 +289,14 @@ private:
 
 	}
 
+	void display_drivers_all() {
+
+	}
+
+	void display_drivers_rad() {
+
+	}
+
 
 		void menu_pressed() {
 			first_menu.show();
@@ -318,6 +326,8 @@ private:
 		static void cb_request_okay(Address, Address);
 		static void cb_display_customers_all(Address, Address);
 		static void cb_display_customers_neg(Address, Address);
+		static void cb_display_drivers_all(Address, Address);
+		static void cb_diplay_drivers_rad(Address, Address);
 	};
 
 	User_window::User_window(Point xy, int w, int h, const string& title) :
@@ -472,7 +482,8 @@ private:
 
 		display_customers_neg(
 			Point(150, 550), 100, 40, "Customers with Negative Balance"
-		)
+		),
+
 
 
 	{
