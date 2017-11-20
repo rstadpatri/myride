@@ -15,9 +15,9 @@ namespace funct_lib {
 		string photo_loc;
 
 	protected:
-		Member(string s) : name(s), photo_added(false), photo_loc("default.jpg") {}
-		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {}
-		Member() {}
+		Member(string s) : name(s), photo_added(false) {/*photo_loc = default_loc*/};
+		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {};
+		Member() {};
 
 	public:
 		bool photo_added;
@@ -164,19 +164,7 @@ namespace funct_lib {
 
 	void add_customer(string name, double balance, string photo_loc);
 
-<<<<<<< HEAD
-	//template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
-	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
-		for (unsigned int i = 0; i < list.size(); ++i) {
-			if (list[i].get_name() == name) {
-				list.erase(list.begin() + i);
-			}
-		}
-	}
-
-=======
-	void remove_member(char c, string name); //GUI will need to provide call with different types of classes
->>>>>>> b05db81ffa016cb815c76fe84cf3f9239dd7180d
+	template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
 
 	void add_driver(string name, double balance, Place loc, string photo_loc);
 

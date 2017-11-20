@@ -99,33 +99,11 @@
 		}
 	}
 
-	void remove_member(char c, string name) {  //GUI will need to provide call with different types of classes
-		switch (c) {
-		case 'c':
-			for (unsigned int i = 0; i < customers.size(); ++i) {
-				if (customers[i].get_name() == name) {
-					customers.erase(customers.begin() + i);
-					break;
-				}
+	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
+		for (unsigned int i = 0; i < list.size(); ++i) {
+			if (list[i].get_name() == name) {
+				list.erase(list.begin() + i);
 			}
-		case 'd':
-			for (unsigned int i = 0; i < drivers.size(); ++i) {
-				if (drivers[i].get_name() == name) {
-					drivers.erase(drivers.begin() + i);
-					break;
-				}
-			}
-			break;
-		case 'p':
-			for (unsigned int i = 0; i < places.size(); ++i) {
-				if (places[i].get_name() == name) {
-					places.erase(places.begin() + i);
-					break;
-				}
-			}
-			break;
-		default:
-			break;
 		}
 	}
 
