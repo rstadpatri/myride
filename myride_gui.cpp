@@ -46,8 +46,13 @@ private:
 	Button request_submit;
 	Out_box request_summary;
 	Button request_okay;
+	Button display_customers_all;
+	Button display_customers_neg;
+	Button display_drivers_all;
+	Button display_drivers_rad;
 
 	char add_indicator;
+	char remove_indicator;
 
 
 	//function members
@@ -191,6 +196,8 @@ private:
 		remove_customer.hide();
 		remove_driver.show();
 		remove_place.show();
+
+		remove_indicator = 'c';
 	}
 
 	void remove_driver_pressed() {
@@ -199,6 +206,8 @@ private:
 		remove_customer.show();
 		remove_driver.hide();
 		remove_place.show();
+
+		remove_indicator = 'd';
 	}
 
 	void remove_place_pressed() {
@@ -207,14 +216,21 @@ private:
 		remove_customer.show();
 		remove_driver.show();
 		remove_place.hide();
+
+		remove_indicator = 'p';
 	}
 
 	void remove_submit_pressed() {
-		remove_name.show();
-		remove_submit.show();
-		remove_customer.show();
-		remove_driver.show();
-		remove_place.show();
+		remove_name.hide();
+		remove_submit.hide();
+		remove_customer.hide();
+		remove_driver.hide();
+		remove_place.hide();
+		show_menu();
+
+		string name = remove_name.get_string();
+
+		remove_member(remove_indicator, name);
 	}
 
 	void request_pressed() {
@@ -231,7 +247,7 @@ private:
 		request_info.put(place_list);
 		request_info.show();
 		request_submit.show();
-		
+
 		hide_menu();
 	}
 
@@ -245,7 +261,7 @@ private:
 		string loc_name = request_placeA_name.get_string();
 		string customer_name = request_customer_name.get_string();
 		string dest_name = request_placeB_name.get_string();
-		
+
 		string summary = request_ride(customer_name, loc_name, 1, dest_name);
 
 		request_summary.show();
@@ -259,42 +275,54 @@ private:
 		show_menu();
 	}
 
-	void display_presed() {
-		//add menu here
-		hide_menu();
+
+			void display_pressed() {
+				//add menu here
+				hide_menu();
+		}
+
+	void display_customers_all() {
+
 	}
 
-	void menu_pressed() {
-		first_menu.show();
+	void display_customers_neg() {
+
 	}
 
-	void quit() {
-		export_data();
-		hide();
+
+		void menu_pressed() {
+			first_menu.show();
+		}
+
+		void quit() {
+			export_data();
+			hide();
+		};
+
+		//callback functions
+		static void cb_add(Address, Address);
+		static void cb_remove(Address, Address);
+		static void cb_request(Address, Address);
+		static void cb_display(Address, Address);
+		static void cb_menu(Address, Address);
+		static void cb_quit(Address, Address);
+		static void cb_add_customer(Address, Address);
+		static void cb_add_driver(Address, Address);
+		static void cb_add_place(Address, Address);
+		static void cb_add_submit(Address, Address);
+		static void cb_remove_customer(Address, Address);
+		static void cb_remove_driver(Address, Address);
+		static void cb_remove_place(Address, Address);
+		static void cb_remove_submit(Address, Address);
+		static void cb_request_submit(Address, Address);
+		static void cb_request_okay(Address, Address);
+		static void cb_display_customers_all(Address, Address);
+		static void cb_display_customers_neg(Address, Address);
 	};
 
-	//callback functions
-	static void cb_add(Address, Address);
-	static void cb_remove(Address, Address);
-	static void cb_request(Address, Address);
-	static void cb_display(Address, Address);
-	static void cb_menu(Address, Address);
-	static void cb_quit(Address, Address);
-	static void cb_add_customer(Address, Address);
-	static void cb_add_driver(Address, Address);
-	static void cb_add_place(Address, Address);
-	static void cb_add_submit(Address, Address);
-	static void cb_remove_customer(Address, Address);
-	static void cb_remove_driver(Address, Address);
-	static void cb_remove_place(Address, Address);
-	static void cb_remove_submit(Address, Address);
-	static void cb_request_submit(Address, Address);
-	static void cb_request_okay(Address, Address);
-};
-
-User_window::User_window(Point xy, int w, int h, const string& title) :
-	//initialization
-	Window(xy, w, h, title),
+	User_window::User_window(Point xy, int w, int h, const string& title) :
+		//initialization
+		Window(xy, w, h, title),
 
 		quit_button(
 			Point(x_max() / 2 - 50, y_max() - 40),
@@ -391,7 +419,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_remove_place),
 
 		remove_submit(
-			Point(x_max() - 100, y_max() - 80),
+			Point(x_max() - 100, y_max() - 40),
 			100, 40,
 			"Submit",
 			cb_remove_submit),
@@ -417,12 +445,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			"Place B:"),
 
 		request_info(
-			Point(x_max()-(x_max()-100), 130),
+			Point(x_max() - (x_max() - 100), 130),
 			x_max() - 200, y_max() - 230,
 			"Places  \nand  \ntags: "),
 
 		request_submit(
-			Point(x_max()/2 + 130, 40),
+			Point(x_max() / 2 + 130, 40),
 			100, 80,
 			"Submit",
 			cb_request_submit),
@@ -434,146 +462,167 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			cb_request_okay),
 
 		request_summary(
-			Point(x_max() - (x_max()-20), 100),
-			x_max()-40, 300,
-			"")
+			Point(x_max() - (x_max() - 20), 100),
+			x_max() - 40, 300,
+			""),
 
-{
-	//constructor body
+		display_customers_all(
+			Point(150, 500), 100, 40, "All"
+		),
 
-	attach(quit_button);
-	attach(add_customer_button);
-	attach(add_driver_button);
-	attach(add_place_button);
-	attach(add_submit);
-	attach(add_name);
-	attach(add_balance);
-	attach(add_driver_place);
-	attach(add_lat);
-	attach(add_lon);
-	attach(add_tags);
-	attach(add_photo_loc);
-	attach(add_type);
-	attach(remove_customer);
-	attach(remove_driver);
-	attach(remove_place);
-	attach(remove_submit);
-	attach(remove_name);
-	attach(request_placeA_name);
-	attach(request_placeB_name);
-	attach(request_customer_name);
-	attach(request_info);
-	attach(request_submit);
-	attach(request_okay);
-	attach(request_summary);
+		display_customers_neg(
+			Point(150, 550), 100, 40, "Customers with Negative Balance"
+		)
 
 
-	add_customer_button.hide();
-	add_driver_button.hide();
-	add_place_button.hide();
-	add_submit.hide();
-	add_name.hide();
-	add_balance.hide();
-	add_driver_place.hide();
-	add_lat.hide();
-	add_lon.hide();
-	add_tags.hide();
-	add_photo_loc.hide();
-	add_type.hide();
-	remove_customer.hide();
-	remove_driver.hide();
-	remove_place.hide();
-	remove_submit.hide();
-	remove_name.hide();
-	request_placeA_name.hide();
-	request_placeB_name.hide();
-	request_customer_name.hide();
-	request_info.hide();
-	request_submit.hide();
-	request_summary.hide();
-	request_okay.hide();
+	{
+		//constructor body
 
-	first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
-	first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
-	first_menu.attach(new Button(Point(0, 0), 0, 0, "request", cb_request));
-	first_menu.attach(new Button(Point(0, 0), 0, 0, "display", cb_display));
-	attach(first_menu);
+		attach(quit_button);
+		attach(add_customer_button);
+		attach(add_driver_button);
+		attach(add_place_button);
+		attach(add_submit);
+		attach(add_name);
+		attach(add_balance);
+		attach(add_driver_place);
+		attach(add_lat);
+		attach(add_lon);
+		attach(add_tags);
+		attach(add_photo_loc);
+		attach(add_type);
+		attach(remove_customer);
+		attach(remove_driver);
+		attach(remove_place);
+		attach(remove_submit);
+		attach(remove_name);
+		attach(request_placeA_name);
+		attach(request_placeB_name);
+		attach(request_customer_name);
+		attach(request_info);
+		attach(request_submit);
+		attach(request_okay);
+		attach(request_summary);
+		attach(display_customers_all);
+		attach(display_customers_neg);
 
-}
 
-//callback functions for buttons
-void User_window::cb_quit(Address, Address pw) {
-	reference_to<User_window>(pw).quit();
-}
+		add_customer_button.hide();
+		add_driver_button.hide();
+		add_place_button.hide();
+		add_submit.hide();
+		add_name.hide();
+		add_balance.hide();
+		add_driver_place.hide();
+		add_lat.hide();
+		add_lon.hide();
+		add_tags.hide();
+		add_photo_loc.hide();
+		add_type.hide();
+		remove_customer.hide();
+		remove_driver.hide();
+		remove_place.hide();
+		remove_submit.hide();
+		remove_name.hide();
+		request_placeA_name.hide();
+		request_placeB_name.hide();
+		request_customer_name.hide();
+		request_info.hide();
+		request_submit.hide();
+		request_summary.hide();
+		request_okay.hide();
+		display_customers_all.hide();
+		display_customer_neg.hide();
 
-void User_window::cb_add(Address, Address pw) {
-	reference_to<User_window>(pw).add_pressed();
-}
+		first_menu.attach(new Button(Point(0, 0), 0, 0, "add", cb_add));
+		first_menu.attach(new Button(Point(0, 0), 0, 0, "remove", cb_remove));
+		first_menu.attach(new Button(Point(0, 0), 0, 0, "request", cb_request));
+		first_menu.attach(new Button(Point(0, 0), 0, 0, "display", cb_display));
+		attach(first_menu);
 
-void User_window::cb_add_customer(Address, Address pw) {
-	reference_to<User_window>(pw).add_customer_pressed();
-}
-
-void User_window::cb_add_driver(Address, Address pw) {
-	reference_to<User_window>(pw).add_driver_pressed();
-}
-
-void User_window::cb_add_place(Address, Address pw) {
-	reference_to<User_window>(pw).add_place_pressed();
-}
-
-void User_window::cb_add_submit(Address, Address pw) {
-	reference_to<User_window>(pw).add_submit_pressed();
-}
-
-void User_window::cb_remove(Address, Address pw) {
-	reference_to<User_window>(pw).remove_pressed();
-}
-
-void User_window::cb_remove_customer(Address, Address pw) {
-	reference_to<User_window>(pw).remove_customer_pressed();
-}
-
-void User_window::cb_remove_driver(Address, Address pw) {
-	reference_to<User_window>(pw).remove_driver_pressed();
-}
-
-void User_window::cb_remove_place(Address, Address pw) {
-	reference_to<User_window>(pw).remove_place_pressed();
-}
-
-void User_window::cb_remove_submit(Address, Address pw) {
-	reference_to<User_window>(pw).remove_submit_pressed();
-}
-
-void User_window::cb_request(Address, Address pw) {
-	reference_to<User_window>(pw).request_pressed();
-}
-
-void User_window::cb_request_submit(Address, Address pw) {
-	reference_to<User_window>(pw).request_submit_pressed();
-}
-
-void User_window::cb_request_okay(Address, Address pw) {
-	reference_to<User_window>(pw).request_okay_pressed();
-}
-
-void User_window::cb_display(Address, Address pw) {
-	//reference to display pressed
-}
-
-void User_window::cb_menu(Address, Address pw) {
-	reference_to<User_window>(pw).menu_pressed();
-}
-
-int main() {
-	try {
-		import_data();
-		User_window win(Point(100, 100), 600, 600, "My Ride");
-		return gui_main();
 	}
-	catch (exception& e) {
-		cerr << "exception: " << e.what() << '\n';
-		return 1;
+
+	//callback functions for buttons
+	void User_window::cb_quit(Address, Address pw) {
+		reference_to<User_window>(pw).quit();
 	}
-}
+
+	void User_window::cb_add(Address, Address pw) {
+		reference_to<User_window>(pw).add_pressed();
+	}
+
+	void User_window::cb_add_customer(Address, Address pw) {
+		reference_to<User_window>(pw).add_customer_pressed();
+	}
+
+	void User_window::cb_add_driver(Address, Address pw) {
+		reference_to<User_window>(pw).add_driver_pressed();
+	}
+
+	void User_window::cb_add_place(Address, Address pw) {
+		reference_to<User_window>(pw).add_place_pressed();
+	}
+
+	void User_window::cb_add_submit(Address, Address pw) {
+		reference_to<User_window>(pw).add_submit_pressed();
+	}
+
+	void User_window::cb_remove(Address, Address pw) {
+		reference_to<User_window>(pw).remove_pressed();
+	}
+
+	void User_window::cb_remove_customer(Address, Address pw) {
+		reference_to<User_window>(pw).remove_customer_pressed();
+	}
+
+	void User_window::cb_remove_driver(Address, Address pw) {
+		reference_to<User_window>(pw).remove_driver_pressed();
+	}
+
+	void User_window::cb_remove_place(Address, Address pw) {
+		reference_to<User_window>(pw).remove_place_pressed();
+	}
+
+	void User_window::cb_remove_submit(Address, Address pw) {
+		reference_to<User_window>(pw).remove_submit_pressed();
+	}
+
+	void User_window::cb_request(Address, Address pw) {
+		reference_to<User_window>(pw).request_pressed();
+	}
+
+	void User_window::cb_request_submit(Address, Address pw) {
+		reference_to<User_window>(pw).request_submit_pressed();
+	}
+
+	void User_window::cb_request_okay(Address, Address pw) {
+		reference_to<User_window>(pw).request_okay_pressed();
+	}
+
+	void User_window::cb_display(Address, Address pw) {
+		reference_to<User_window>(pw).display_pressed();
+	}
+
+	void User_window::cb_display_customers_all(Address, Address pw) {
+		reference_to<User_window>(pw).display_customers_all_pressed();
+	}
+
+	void User_window::cb_display_customers_neg(Address, Address pw) {
+		reference_to<User_window>(pw).display_customers_neg_pressed();
+	}
+
+	void User_window::cb_menu(Address, Address pw) {
+		reference_to<User_window>(pw).menu_pressed();
+	}
+
+	int main() {
+		try {
+			import_data();
+			User_window win(Point(100, 100), 600, 600, "My Ride");
+			return gui_main();
+		}
+		catch (exception& e) {
+			cerr << "exception: " << e.what() << '\n';
+			return 1;
+		}
+	}
