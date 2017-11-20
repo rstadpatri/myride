@@ -5,10 +5,12 @@
 #include "Window.h"
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
+#include "display_gui_2_by_2.h"
 
 using namespace Graph_lib;
 using namespace std;
 using namespace funct_lib;
+using namespace disp_lib;
 
 struct User_window : Graph_lib::Window {
 
@@ -48,6 +50,7 @@ private:
 	Button request_okay;
 
 	char add_indicator;
+	char remove_indicator;
 
 
 	//function members
@@ -186,6 +189,7 @@ private:
 	}
 
 	void remove_customer_pressed() {
+		remove_indicator = 'c';
 		remove_name.show();
 		remove_submit.show();
 		remove_customer.hide();
@@ -194,6 +198,7 @@ private:
 	}
 
 	void remove_driver_pressed() {
+		remove_indicator = 'd';
 		remove_name.show();
 		remove_submit.show();
 		remove_customer.show();
@@ -202,6 +207,7 @@ private:
 	}
 
 	void remove_place_pressed() {
+		remove_indicator = 'p';
 		remove_name.show();
 		remove_submit.show();
 		remove_customer.show();
@@ -210,11 +216,32 @@ private:
 	}
 
 	void remove_submit_pressed() {
-		remove_name.show();
-		remove_submit.show();
-		remove_customer.show();
-		remove_driver.show();
-		remove_place.show();
+		remove_name.hide();
+		remove_submit.hide();
+		remove_customer.hide();
+		remove_driver.hide();
+		remove_place.hide();
+		vector<Place> places;
+		vector<Customer> customers;
+		vector<Driver> drivers;
+
+		switch (remove_indicator) {
+		case 'c':
+			//customers.template remove(vector<Remove>& customers, string name)();
+			//remove<string>(customers, "Terry");
+			//template<string>(customers, "Terry");
+			//list.template remove<Customer>();
+			//customers<string>("Terry");
+
+			break;
+		case 'd':
+			//drivers.template remove(vector<Remove>& drivers, string name)();
+			break;
+		case 'p':
+			//places.template remove(vector<Remove>& places, string name)();
+			break;
+		}
+		show_menu();
 	}
 
 	void request_pressed() {
@@ -231,7 +258,7 @@ private:
 		request_info.put(place_list);
 		request_info.show();
 		request_submit.show();
-		
+
 		hide_menu();
 	}
 
@@ -245,7 +272,7 @@ private:
 		string loc_name = request_placeA_name.get_string();
 		string customer_name = request_customer_name.get_string();
 		string dest_name = request_placeB_name.get_string();
-		
+
 		string summary = request_ride(customer_name, loc_name, 1, dest_name);
 
 		request_summary.show();
@@ -260,6 +287,7 @@ private:
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	void display_presed() {
 =======
 <<<<<<< HEAD
@@ -272,6 +300,11 @@ private:
 >>>>>>> parent of f6639b9... Revert
 		//add menu here
 		hide_menu();
+=======
+	void display_pressed() {
+		//Will be hide/show menu for specific display
+		Disp_2 driver2by2 = Disp_2(Point(1000, 100), 1000, 1000, "Drivers", get_drivers());
+>>>>>>> parent of be4ecab... Revert "update"
 	}
 
 	void menu_pressed() {
@@ -306,6 +339,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	//initialization
 	Window(xy, w, h, title),
 
+<<<<<<< HEAD
 		quit_button(
 			Point(x_max() / 2 - 50, y_max() - 40),
 			100, 40,
@@ -447,6 +481,149 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			Point(x_max() - (x_max()-20), 100),
 			x_max()-40, 300,
 			"")
+=======
+	quit_button(
+		Point(x_max() / 2 - 50, y_max() - 40),
+		100, 40,
+		"Quit",
+		cb_quit),
+
+	first_menu(
+		Point(x_max() / 2 - 50, y_max() / 6),
+		100, 40,
+		Menu::vertical,
+		"My Ride"),
+
+	add_customer_button(
+		Point(x_max() / 4 - 50, 50),
+		100, 40,
+		"Customer",
+		cb_add_customer),
+
+	add_driver_button(
+		Point(2 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Driver",
+		cb_add_driver),
+
+	add_place_button(
+		Point(3 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Place",
+		cb_add_place),
+
+	add_submit(
+		Point(x_max() - 100, y_max() - 40),
+		100, 40,
+		"Submit",
+		cb_add_submit),
+
+	add_name(
+		Point(x_max() / 2 - 50, 100),
+		100, 20,
+		"Name:"),
+
+	add_balance(
+		Point(x_max() / 2 - 50, 130),
+		100, 20,
+		"Balance:"),
+
+	add_driver_place(
+		Point(x_max() / 2 - 50, 160),
+		100, 20,
+		"Place:"),
+
+	add_lat(
+		Point(x_max() / 2 - 50, 190),
+		100, 20,
+		"Latitude:"),
+
+	add_lon(
+		Point(x_max() / 2 - 50, 220),
+		100, 20,
+		"Longitude:"),
+
+	add_tags(
+		Point(x_max() / 2 - 50, 250),
+		200, 20,
+		"Tags:"),
+
+	add_photo_loc(
+		Point(x_max() / 2 - 50, 280),
+		100, 20,
+		"Photo filename:"),
+
+	add_type(
+		Point(x_max() - 100, y_max() - 100),
+		100, 20,
+		"Selected Type:"),
+
+	remove_customer(
+		Point(x_max() / 4 - 50, 50),
+		100, 40,
+		"Customer",
+		cb_remove_customer),
+
+	remove_driver(
+		Point(2 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Driver",
+		cb_remove_driver),
+
+	remove_place(
+		Point(3 * x_max() / 4 - 50, 50),
+		100, 40,
+		"Place",
+		cb_remove_place),
+
+	remove_submit(
+		Point(x_max() - 100, y_max() - 80),
+		100, 40,
+		"Submit",
+		cb_remove_submit),
+
+	remove_name(
+		Point(x_max() / 2 - 50, 100),
+		100, 20,
+		"Name:"),
+
+	request_placeA_name(
+		Point(x_max() / 2 - 100, 70),
+		200, 20,
+		"Place A:"),
+
+	request_customer_name(
+		Point(x_max() / 2 - 100, 40),
+		200, 20,
+		"Customer Name:"),
+
+	request_placeB_name(
+		Point(x_max() / 2 - 100, 100),
+		200, 20,
+		"Place B:"),
+
+	request_info(
+		Point(x_max() - (x_max() - 100), 130),
+		x_max() - 200, y_max() - 230,
+		"Places  \nand  \ntags: "),
+
+	request_submit(
+		Point(x_max() / 2 + 130, 40),
+		100, 80,
+		"Submit",
+		cb_request_submit),
+
+	request_okay(
+		Point(x_max() - 100, y_max() - 40),
+		100, 40,
+		"Okay",
+		cb_request_okay),
+
+	request_summary(
+		Point(x_max() - (x_max() - 20), 100),
+		x_max() - 40, 300,
+		"")
+>>>>>>> parent of be4ecab... Revert "update"
 
 {
 	//constructor body
@@ -569,7 +746,7 @@ void User_window::cb_request_okay(Address, Address pw) {
 }
 
 void User_window::cb_display(Address, Address pw) {
-	//reference to display pressed
+	reference_to<User_window>(pw).display_pressed();
 }
 
 void User_window::cb_menu(Address, Address pw) {
