@@ -144,21 +144,8 @@
 	}
 
 	vector<Place> ride_ordest(string location, int nametag, string destination_tag) {
-		//Returns Place vector with ride origin and destination
-		string extra_input;
 
 		vector<Place> ordest;
-		//cout << "\n\nWhere are you?\n\n";		//NEED GUI SUPPORT
-
-		//for (unsigned int i = 0; i < places.size(); ++i) {  Lists places to choose from.
-		//	cout << places[i].name << "\n";
-		//}
-		//cout << "Other\n\nEnter name: ";
-
-		//cin >> location;
-		//getline(cin, extra_input);
-		//location += extra_input;
-
 
 		for (unsigned int i = 0; i < places.size(); ++i) {
 			if (location == places[i].get_name()) {
