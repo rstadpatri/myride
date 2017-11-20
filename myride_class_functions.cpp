@@ -6,11 +6,11 @@
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
 
-constexpr double R = 3963.1676;  //Radius of Earth
-constexpr double pi = 3.14159;
-string filename = "Data File";
+	constexpr double R = 3963.1676;  //Radius of Earth
+	constexpr double pi = 3.14159;
+	string filename = "Data File";
 
-namespace funct_lib {
+	namespace funct_lib{
 
 	vector<Place> places;
 	vector<Customer> customers;
@@ -59,7 +59,7 @@ namespace funct_lib {
 	void add_place(string name, double lat, double lon, vector<string> tags, string photo_loc) {
 		//Takes in user input and creates a new Place_info object
 		//Unincluded error checking: I did not check to make sure that latitude and longitude were in the appropriate range.
-
+		
 		if (photo_loc == "") {
 			Place new_place{ name, lat, lon, tags };
 			places.push_back(new_place);
@@ -99,11 +99,33 @@ namespace funct_lib {
 		}
 	}
 
-	template<class C> void remove(vector<C>& list, string name) {  //GUI will need to provide call with different types of classes
-		for (unsigned int i = 0; i < list.size(); ++i) {
-			if (list[i].get_name() == name) {
-				list.erase(list.begin() + i);
+	void remove_member(char c, string name) {  //GUI will need to provide call with different types of classes
+		switch (c) {
+		case 'c':
+			for (unsigned int i = 0; i < customers.size(); ++i) {
+				if (customers[i].get_name() == name) {
+					customers.erase(customers.begin() + i);
+					break;
+				}
 			}
+		case 'd':
+			for (unsigned int i = 0; i < drivers.size(); ++i) {
+				if (drivers[i].get_name() == name) {
+					drivers.erase(drivers.begin() + i);
+					break;
+				}
+			}
+			break;
+		case 'p':
+			for (unsigned int i = 0; i < places.size(); ++i) {
+				if (places[i].get_name() == name) {
+					places.erase(places.begin() + i);
+					break;
+				}
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -145,7 +167,7 @@ namespace funct_lib {
 		}
 
 		switch (nametag) {  //Switch case for entering either a tag or a name of a location
-
+		
 		case 1:
 			for (unsigned int i = 0; i < places.size(); ++i) {
 				if (destination_tag == places[i].get_name()) {
@@ -257,11 +279,11 @@ namespace funct_lib {
 		sm << distance / 2;
 		sm >> halfdist;
 
-		string summary = "\n" + designated_driver.get_name() + " has driven "
+		string summary = "\n" + designated_driver.get_name() + " has driven " 
 			+ designated_customer.get_name() + " from " + ordest[0].get_name() + " to "
-			+ ordest[1].get_name() + ".\n" + designated_driver.get_name()
-			+ "'s account has been credited with $" + halfdist + ".\nAnd "
-			+ designated_customer.get_name() + "'s account has been charged $"
+			+ ordest[1].get_name() + ".\n" + designated_driver.get_name() 
+			+ "'s account has been credited with $" + halfdist + ".\nAnd " 
+			+ designated_customer.get_name() + "'s account has been charged $" 
 			+ dist + ".\n";
 
 		return summary;
@@ -377,7 +399,7 @@ namespace funct_lib {
 
 			ost << customers.size() << "\n";
 			for (unsigned int i = 0; i < customers.size(); ++i) {
-				ost << customers[i].get_name() << " " << customers[i].get_balance() << " "
+				ost << customers[i].get_name() << " " << customers[i].get_balance() << " " 
 					<< customers[i].export_photo() << "\n";
 			}
 		}
@@ -446,4 +468,4 @@ namespace funct_lib {
 	//	return 0;
 	//}
 
-}
+	}

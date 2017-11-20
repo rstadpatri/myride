@@ -8,16 +8,16 @@ namespace funct_lib {
 	double to_radian(double degree);  //Conversion from degrees to radians
 
 	double distance_between(double x1d, double y1d, double x2d, double y2d);
-	// Formula for calculating distance between waypoints
+		// Formula for calculating distance between waypoints
 
 	class Member {
 		string name;
 		string photo_loc;
 
 	protected:
-		Member(string s) : name(s), photo_added(false) {/*photo_loc = default_loc*/ };
-		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {};
-		Member() {};
+		Member(string s) : name(s), photo_added(false), photo_loc("default.jpg") {}
+		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {}
+		Member() {}
 
 	public:
 		bool photo_added;
@@ -64,7 +64,7 @@ namespace funct_lib {
 			for (unsigned int i = 0; i < tags.size(); ++i) {
 				add_tag(tags[i]);
 			}
-		}
+			}
 
 		Place() {}
 
@@ -164,7 +164,7 @@ namespace funct_lib {
 
 	void add_customer(string name, double balance, string photo_loc);
 
-	template<class C> void remove(vector<C>& list, string name);  //GUI will need to provide call with different types of classes
+	void remove_member(char c, string name);
 
 	void add_driver(string name, double balance, Place loc, string photo_loc);
 
