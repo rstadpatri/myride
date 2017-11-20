@@ -5,12 +5,10 @@
 #include "Window.h"
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
-#include "display_gui_2_by_2.h"
 
 using namespace Graph_lib;
 using namespace std;
 using namespace funct_lib;
-using namespace disp_lib;
 
 struct User_window : Graph_lib::Window {
 
@@ -50,16 +48,22 @@ private:
 	Button request_okay;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 	Button display_customers_all;
 	Button display_customers_neg;
 	Button display_drivers_all;
 	Button display_drivers_rad;
+<<<<<<< HEAD
 =======
 	Menu display_size_menu;
 
 >>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 =======
 >>>>>>> parent of 5929cac... added display buttons
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 
 	char add_indicator;
 
@@ -275,6 +279,9 @@ private:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 
 			void display_pressed() {
 				//add menu here
@@ -283,6 +290,7 @@ private:
 
 	void display_customers_all() {
 
+<<<<<<< HEAD
 =======
 	void display_pressed() {
 		display_size_menu.show();
@@ -293,6 +301,8 @@ private:
 		//add menu here
 		hide_menu();
 >>>>>>> parent of 5929cac... added display buttons
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 	}
 
 	void menu_pressed() {
@@ -341,10 +351,10 @@ private:
 		static void cb_diplay_drivers_rad(Address, Address);
 	};
 
-<<<<<<< HEAD
 	User_window::User_window(Point xy, int w, int h, const string& title) :
 		//initialization
 		Window(xy, w, h, title),
+<<<<<<< HEAD
 =======
 =======
 	void quit() {
@@ -385,6 +395,8 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 >>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 =======
 >>>>>>> parent of 5929cac... added display buttons
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 
 		quit_button(
 			Point(x_max() / 2 - 50, y_max() - 40),
@@ -526,6 +538,9 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		request_summary(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
 			Point(x_max() - (x_max() - 20), 100),
 			x_max() - 40, 300,
 			""),
@@ -691,6 +706,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 			return 1;
 		}
 	}
+<<<<<<< HEAD
 =======
 			Point(x_max() - (x_max()-20), 100),
 			x_max()-40, 300,
@@ -881,3 +897,5 @@ int main() {
 >>>>>>> 3fcbbf79fd4149c9cc61c6d604d5fc2590edb42c
 =======
 >>>>>>> parent of 5929cac... added display buttons
+=======
+>>>>>>> parent of 0b38142... Merge branch 'master' of https://github.com/rstadpatri/myride
