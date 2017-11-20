@@ -262,9 +262,14 @@ private:
 <<<<<<< HEAD
 	void display_presed() {
 =======
+<<<<<<< HEAD
 
 	void display_pressed() {
 >>>>>>> parent of 3fcbbf7... Display Menu
+=======
+	void display_pressed() {
+>>>>>>> parent of b05db81... Myride with 2x2 implementation
+>>>>>>> parent of f6639b9... Revert
 		//add menu here
 		hide_menu();
 	}
