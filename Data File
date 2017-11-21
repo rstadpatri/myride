@@ -1,4 +1,4 @@
-9
+10
 CLL 30.5885 -96.3639 2 airport car_rental 0
 Central_Park 40.7823 -73.9654 3 park playground restaurant 0
 Bright_Building 30.619 -96.3389 2 computer_science aerospace 0
@@ -8,14 +8,16 @@ UCentre 30.6254 -96.3461 2 housing pool 0
 Lake_Bryan 30.7085 -96.4677 2 lake camping 0
 Walmart 30.5974 -96.3005 2 shopping produce 0
 Des_Moines 41.5847 -93.6261 2 Home Work 0
-5
+LA 34.0522 -118.244 2 big_city lights 0
+6
 Jeff_Gordon 20 CLL  0
 Alain_Prost 100 Lake_Bryan  0
-Jim 10 Walmart  0
-Greg 10 UCentre  0
+Jim 661.013 LA  0
+Greg 14.6201 Lake_Bryan  0
 Reuben 20 CLL  0
+Jacob 45 Des_Moines  0
 4
-Hughey -1436.37  0
-Dewey -1428.95  0
-Louie 20  0
-Esposito 196.236  0
+Hughey -1445.61  0
+Louie -753.029  0
+Esposito -1105.79  0
+Doug 999  0

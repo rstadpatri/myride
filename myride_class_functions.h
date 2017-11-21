@@ -170,7 +170,7 @@ namespace funct_lib {
 
 	vector<Place> ride_ordest(string location, int nametag, string destination_tag);
 
-	Driver find_driver(vector<Place> ordest);
+	int find_driver(vector<Place> ordest);
 
 	vector<Driver> find_driver_within(string tag, double radius);
 

@@ -44,6 +44,8 @@ private:
 	In_box request_placeA_name;
 	In_box request_customer_name;
 	In_box request_placeB_name;
+	Button request_name;
+	Button request_tag;
 	Out_box request_info;
 	Button request_submit;
 	Out_box request_summary;
@@ -61,6 +63,7 @@ private:
 
 	char add_indicator;
 	char remove_indicator;
+	int nametag_indicator;
 
 	//function members
 	void hide_menu() {
@@ -241,9 +244,11 @@ private:
 	}
 
 	void request_pressed() {
+		nametag_indicator = 1;
 		request_placeA_name.show();
 		request_placeB_name.show();
 		request_customer_name.show();
+		request_tag.show();
 
 		vector<Place>& places = get_places();
 		string place_list;
@@ -258,10 +263,24 @@ private:
 		hide_menu();
 	}
 
+	void request_name_pressed() {
+		request_name.hide();
+		request_tag.show();
+		nametag_indicator = 1;
+	}
+
+	void request_tag_pressed() {
+		request_tag.hide();
+		request_name.show();
+		nametag_indicator = 2;
+	}
+
 	void request_submit_pressed() {
 		request_placeA_name.hide();
 		request_placeB_name.hide();
 		request_customer_name.hide();
+		request_tag.hide();
+		request_name.hide();
 		request_info.hide();
 		request_submit.hide();
 
@@ -269,7 +288,7 @@ private:
 		string customer_name = request_customer_name.get_string();
 		string dest_name = request_placeB_name.get_string();
 
-		string summary = request_ride(customer_name, loc_name, 1, dest_name);
+		string summary = request_ride(customer_name, loc_name, nametag_indicator, dest_name);
 
 		request_summary.show();
 		request_summary.put(summary);
@@ -393,7 +412,10 @@ private:
 	}
 
 
-	void display_2_pressed() {};
+	int display_2_pressed() {
+		Disp_2 driver_disp(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", get_drivers());
+		return gui_main();
+	};
 
 	void display_3_pressed() {};
 
@@ -434,6 +456,8 @@ private:
 	static void cb_2(Address, Address);
 	static void cb_3(Address, Address);
 	static void cb_4(Address, Address);
+	static void cb_request_name(Address, Address);
+	static void cb_request_tag(Address, Address);
 
 };
 
@@ -561,6 +585,20 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		200, 20,
 		"Place B:"),
 
+	request_name(
+		Point(10, 70),
+		100, 40,
+		"Use name",
+		cb_request_name
+	),
+
+	request_tag(
+		Point(10, 70),
+		100, 40,
+		"Use tag",
+		cb_request_tag
+	),
+
 	request_info(
 		Point(x_max() - (x_max() - 100), 130),
 		x_max() - 200, y_max() - 230,
@@ -674,6 +712,8 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(request_submit);
 	attach(request_okay);
 	attach(request_summary);
+	attach(request_name);
+	attach(request_tag);
 	attach(display_customers_all);
 	attach(display_customers_neg);
 	attach(display_drivers_all);
@@ -705,6 +745,8 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	request_placeA_name.hide();
 	request_placeB_name.hide();
 	request_customer_name.hide();
+	request_name.hide();
+	request_tag.hide();
 	request_info.hide();
 	request_submit.hide();
 	request_summary.hide();
@@ -780,6 +822,14 @@ void User_window::cb_remove_submit(Address, Address pw) {
 
 void User_window::cb_request(Address, Address pw) {
 	reference_to<User_window>(pw).request_pressed();
+}
+
+void User_window::cb_request_name(Address, Address pw) {
+	reference_to<User_window>(pw).request_name_pressed();
+}
+
+void User_window::cb_request_tag(Address, Address pw) {
+	reference_to<User_window>(pw).request_tag_pressed();
 }
 
 void User_window::cb_request_submit(Address, Address pw) {

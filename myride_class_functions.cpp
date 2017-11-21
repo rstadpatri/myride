@@ -159,18 +159,21 @@
 			for (unsigned int i = 0; i < places.size(); ++i) {
 				if (destination_tag == places[i].get_name()) {
 					ordest.push_back(places[i]);
+					break;
 				}
 			}
 			break;
 
 		case 2:
-
-			//for (unsigned int i = 0; i < places.size(); ++i) {
-			//	vector<string> tags = places[i].get_tags();
-			//	if ((tag == tags[0]) || (tag == tags[1])) {
-			//		ordest.push_back(places[i]);
-			//	}
-			//}
+			for (unsigned int i = 0; i < places.size(); ++i) {
+				vector<string> tags = places[i].get_tags();
+				for (unsigned int j = 0; j < tags.size(); ++j) {
+					if (destination_tag == tags[j]) {
+						ordest.push_back(places[i]);
+						break;
+					}
+				}
+			}
 			break;
 		default:
 			break;
@@ -188,17 +191,18 @@
 		return negative_customers;
 	}
 
-	Driver find_driver(vector<Place> ordest) {	//Returns the driver closest to the origin of the route
+	int find_driver(vector<Place> ordest) {	//Returns the driver closest to the origin of the route
 		vector<double> ranges;
 		double short_distance = 100000; //No two places on earth are 100000 miles apart
 		double distance;
-		Driver designated_driver;  //Initialize with first driver
+		int designated_driver;  //Initialize with first driver
 
 		for (unsigned int i = 0; i < drivers.size(); ++i) {
 			Place driver_loc = drivers[i].get_place();
-			distance = distance_between(ordest[0].get_latitude(), ordest[0].get_longitude(), driver_loc.get_latitude(), driver_loc.get_longitude());
+			distance = distance_between(ordest[0].get_latitude(), ordest[0].get_longitude(),
+				driver_loc.get_latitude(), driver_loc.get_longitude());
 			if (distance < short_distance) {
-				designated_driver = drivers[i];
+				designated_driver = i;
 				short_distance = distance;
 			}
 		}
@@ -239,11 +243,11 @@
 		//Finds driver, finds distance, credits driver account, changes driver's location, debits customer account, prints summary
 
 		vector<Place> ordest = ride_ordest(location, nametag, destination_tag);  // Returns vector with origin and destination
-		Driver designated_driver = find_driver(ordest); //Returns driver with closest driver
+		int designated_driver = find_driver(ordest); //Returns driver with closest driver
 
 		double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
-		designated_driver.add_funds(distance*.5);  //Credits the driver's balance
-		designated_driver.change_place(ordest[1]); //Changes driver's location
+		drivers[designated_driver].add_funds(distance*.5);  //Credits the driver's balance
+		drivers[designated_driver].change_place(ordest[1]); //Changes driver's location
 
 		Customer designated_customer = customers[0]; //Initialization of customer requesting ride
 		for (unsigned int i = 0; i < customers.size(); ++i) {
@@ -266,9 +270,9 @@
 		sm << distance / 2;
 		sm >> halfdist;
 
-		string summary = "\n" + designated_driver.get_name() + " has driven " 
+		string summary = "\n" + drivers[designated_driver].get_name() + " has driven " 
 			+ designated_customer.get_name() + " from " + ordest[0].get_name() + " to "
-			+ ordest[1].get_name() + ".\n" + designated_driver.get_name() 
+			+ ordest[1].get_name() + ".\n" + drivers[designated_driver].get_name() 
 			+ "'s account has been credited with $" + halfdist + ".\nAnd " 
 			+ designated_customer.get_name() + "'s account has been charged $" 
 			+ dist + ".\n";
