@@ -1,5 +1,6 @@
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
+#include <sstream>     // for string streams
 #include "Graph.h"     // next 3 are for graphics library
 #include "GUI.h"
 #include "Window.h"
@@ -33,10 +34,10 @@ namespace disp_lib {
 
 		//member images and info
 		vector<Image*> member_images;
-		Text member1_info;
-		Text member2_info;
-		Text member3_info;
-		Text member4_info;
+		Out_box member1_info;
+		Out_box member2_info;
+		Out_box member3_info;
+		Out_box member4_info;
 
 		Button next_button;
 		Button previous_button;
@@ -51,6 +52,8 @@ namespace disp_lib {
 		}
 
 		void detach_all();
+
+		void attach_all();
 
 		void next_members();
 
@@ -87,24 +90,24 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 70, 0),
+			Point(x_max() - 70, 5),
 			70, 20,
 			"Quit",
 			cb_quit
 		),
 
 		format(
-			Point(x_max() / 2 - 70, 10),
+			Point(x_max() / 2 - 10, 20),
 			"Format: 2x2"
 		),
 
-		member1_info(Text(Point(x_max() / 4, y_max() / 3), "Item 1")),
-		member2_info(Text(Point(x_max() / 4 * 3, y_max() / 3), "Item 2")),
-		member3_info(Text(Point(x_max() / 4, y_max() / 3 * 2), "Item 3")),
-		member4_info(Text(Point(x_max() / 4 * 3, y_max() / 3 * 2), "Item 4"))
+		member1_info(Point(x_max() / 4, y_max() / 3), 100, 100, "Item 1"),
+		member2_info(Point(x_max() / 4 * 3, y_max() / 3), 100, 100, "Item 2"),
+		member3_info(Point(x_max() / 4, y_max() / 3 * 2), 100, 100, "Item 3"),
+		member4_info(Point(x_max() / 4 * 3, y_max() / 3 * 2), 100, 100, "Item 4")
 
 	{//constructor body
-	 // get images & info for members if there are enough members
+	 // get all images for members
 		int x_coord, y_coord;
 		string image_name;
 		for (int i = 0; i < members.size(); ++i) {
@@ -125,30 +128,15 @@ namespace disp_lib {
 				y_coord = y_max() / 3 * 2 - 100;
 			}
 			image_name = members[i].get_photo();
+			stringstream ss;
+			ss << image_name << ".jpg";
+			ss >> image_name;
 			Image* memb_im = new Image(Point(x_coord, y_coord), image_name);
+			memb_im->resize(100, 100);
 			member_images.push_back(memb_im);
 		}
 
-		if (members.size() >= 1) {
-			member1_info.set_label(members[0].display());
-			attach(member1_info);
-			attach(*member_images[0]);
-		}
-		if (members.size() >= 2) {
-			member2_info.set_label(members[1].display());
-			attach(member2_info);
-			attach(*member_images[1]);
-		}
-		if (members.size() >= 3) {
-			member3_info.set_label(members[2].display());
-			attach(member3_info);
-			attach(*member_images[2]);
-		}
-		if (members.size() >= 4) {
-			member4_info.set_label(members[3].display());
-			attach(member4_info);
-			attach(*member_images[3]);
-		}
+		attach_all();
 
 		attach(quit_button);
 		attach(next_button);
@@ -172,14 +160,47 @@ namespace disp_lib {
 	}
 
 	void Disp_2::detach_all() {
-		detach(member1_info);
-		detach(*member_images[screen_num * 4]);
-		detach(member2_info);
-		detach(*member_images[screen_num * 4 + 1]);
-		detach(member3_info);
-		detach(*member_images[screen_num * 4 + 2]);
-		detach(member4_info);
-		detach(*member_images[screen_num * 4 + 3]);
+		if (members.size() >= screen_num * 4 + 1) {
+			detach(member1_info);
+			detach(*member_images[screen_num * 4]);
+		}
+		if (members.size() >= screen_num * 4 + 2) {
+			detach(member2_info);
+			detach(*member_images[screen_num * 4 + 1]);
+		}
+		if (members.size() >= screen_num * 4 + 3) {
+			detach(member3_info);
+			detach(*member_images[screen_num * 4 + 2]);
+		}
+		if (members.size() >= screen_num * 4 + 4) {
+			detach(member4_info);
+			detach(*member_images[screen_num * 4 + 3]);
+		}
+	}
+
+	void Disp_2::attach_all() {
+		if (members.size() >= screen_num * 4 + 1) {
+			attach(member1_info);
+			member1_info.put(members[screen_num * 4].display());
+			attach(*member_images[screen_num * 4]);
+
+
+		}
+		if (members.size() >= screen_num * 4 + 2) {
+			attach(member2_info);
+			member2_info.put(members[screen_num * 4 + 1].display());
+			attach(*member_images[screen_num * 4 + 1]);
+		}
+		if (members.size() >= screen_num * 4 + 3) {
+			attach(member3_info);
+			member3_info.put(members[screen_num * 4 + 2].display());
+			attach(*member_images[screen_num * 4 + 2]);
+		}
+		if (members.size() >= screen_num * 4 + 4) {
+			attach(member4_info);
+			member4_info.put(members[screen_num * 4 + 3].display());
+			attach(*member_images[screen_num * 4 + 3]);
+		}
 	}
 
 	void Disp_2::next_members() {
@@ -191,28 +212,9 @@ namespace disp_lib {
 
 		screen_num++;
 
-		// get images & info for members if there are enough members
-		if (members.size() >= screen_num * 4 + 1) {
-			member1_info.set_label(members[screen_num * 4].display());
-			attach(member1_info);
-			attach(*member_images[screen_num * 4]);
-		}
-		if (members.size() >= screen_num * 4 + 2) {
-			member2_info.set_label(members[screen_num * 4 + 1].display());
-			attach(member2_info);
-			attach(*member_images[screen_num * 4 + 1]);
-		}
-		if (members.size() >= screen_num * 4 + 3) {
-			member3_info.set_label(members[screen_num * 4 + 2].display());
-			attach(member3_info);
-			attach(*member_images[screen_num * 4 + 2]);
-		}
-		if (members.size() >= screen_num * 4 + 4) {
-			member4_info.set_label(members[screen_num * 4 + 3].display());
-			attach(member4_info);
-			attach(*member_images[screen_num * 4 + 3]);
-		}
+		attach_all();
 
+		// Will always have a previous after a next
 		previous_button.show();
 
 		if (members.size() <= 4 * (screen_num + 1))
@@ -229,23 +231,9 @@ namespace disp_lib {
 
 		screen_num--;
 
-		// Will attach all four items because previous was able to be called
-		member1_info.set_label(members[screen_num * 4].display());
-		attach(member1_info);
-		attach(*member_images[screen_num * 4]);
+		attach_all();
 
-		member2_info.set_label(members[screen_num * 4 + 1].display());
-		attach(member2_info);
-		attach(*member_images[screen_num * 4 + 1]);
-
-		member3_info.set_label(members[screen_num * 4 + 2].display());
-		attach(member3_info);
-		attach(*member_images[screen_num * 4 + 2]);
-
-		member4_info.set_label(members[screen_num * 4 + 3].display());
-		attach(member4_info);
-		attach(*member_images[screen_num * 4 + 3]);
-
+		// Will always be a next after a previous
 		next_button.show();
 
 		if (screen_num == 0)
