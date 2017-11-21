@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <iostream>    // for i/o
 #include <sstream>     // for string streams
 #include "Graph.h"     // next 3 are for graphics library
