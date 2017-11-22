@@ -170,6 +170,10 @@ namespace funct_lib {
 
 	vector<Place> ride_ordest(string location, int nametag, string destination_tag);
 
+	vector<Customer> find_neg_customer();
+
+	vector<Place> find_places_tags(string tag);
+
 	int find_driver(vector<Place> ordest);
 
 	vector<Driver> find_driver_within(string tag, double radius);

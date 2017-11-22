@@ -214,10 +214,10 @@
 		vector<Place> possible_places;
 		for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
 			vector<string> tags = places[i].get_tags();
-			for (unsigned int j = 0; i < tags.size(); ++j) {
+			for (unsigned int j = 0; j < tags.size(); ++j) {
 				if (tags[j] == tag) {
 					possible_places.push_back(places[i]);
-					i = places.size();
+					j = tags.size();
 				}
 			}
 		}
@@ -228,7 +228,7 @@
 				}
 			}
 		}
-		for (unsigned int i = 0; i + 1 < eligible_drivers.size(); ++i) {	//Eliminates duplicates
+		for (unsigned int i = 0; (i + 1) < eligible_drivers.size(); ++i) {	//Eliminates duplicates
 			for (unsigned int j = i + 1; j < eligible_drivers.size(); ++j) {
 				if (eligible_drivers[i] == eligible_drivers[j]) {			//Overload this operator
 					eligible_drivers.erase(eligible_drivers.begin() + j);
@@ -237,6 +237,20 @@
 			}
 		}
 		return eligible_drivers;
+	}
+
+	vector<Place> find_places_tags(string tag) {
+		vector<Place> tagged_places;
+		for (unsigned int i = 0; i < places.size(); ++i) {
+			vector<string> tags = places[i].get_tags();
+			for (unsigned int j = 0; j < tags.size(); ++j) {
+				if (tags[j] == tag) {
+					tagged_places.push_back(places[i]);
+					j = tags.size();
+				}
+			}
+		}
+		return tagged_places;
 	}
 
 	string request_ride(string customer_name, string location, int nametag, string destination_tag) {

@@ -64,6 +64,7 @@ private:
 	char add_indicator;
 	char remove_indicator;
 	int nametag_indicator;
+	int disp_size;
 
 	//function members
 	void hide_menu() {
@@ -315,7 +316,105 @@ private:
 		hide_menu();
 	}
 
-	void display_customers_all_pressed() {
+	int display_customers_all_pressed() {
+		display_customers_all.hide();
+		display_customers_neg.hide();
+		display_drivers_all.hide();
+		display_drivers_tag.hide();
+		display_drivers_rad.hide();
+		display_drivers_radius.hide();
+		display_places_all.hide();
+		display_places_withtag.hide();
+		display_places_tag.hide();
+		display_size_menu.hide();
+		show_menu();
+
+		switch (disp_size) {
+		default:
+			Disp_2 customer_disp(Point(x_max() - 600, y_max() - 600), 600, 600, 
+				"All Customers", get_customers());
+			return gui_main();
+		}
+		//opens display GUI (separate window)
+		//implement logic
+	}
+
+	int display_customers_neg_pressed() {
+		display_customers_all.hide();
+		display_customers_neg.hide();
+		display_drivers_all.hide();
+		display_drivers_tag.hide();
+		display_drivers_rad.hide();
+		display_drivers_radius.hide();
+		display_places_all.hide();
+		display_places_withtag.hide();
+		display_places_tag.hide();
+		display_size_menu.hide();
+		show_menu();
+
+		switch (disp_size) {
+		default:
+			Disp_2 cust_neg(Point(x_max() - 600, y_max() - 600), 600, 600, 
+				"Negative Customers", find_neg_customer());
+			return gui_main();
+		}
+		//opens display GUI (separate window)
+		//implement logic
+	}
+
+	int display_drivers_all_pressed() {
+		display_customers_all.hide();
+		display_customers_neg.hide();
+		display_drivers_all.hide();
+		display_drivers_tag.hide();
+		display_drivers_rad.hide();
+		display_drivers_radius.hide();
+		display_places_all.hide();
+		display_places_withtag.hide();
+		display_places_tag.hide();
+		display_size_menu.hide();
+		show_menu();
+
+		switch (disp_size) {
+		default:
+			Disp_2 driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600, 
+				"All Customers", get_drivers());
+			return gui_main();
+		}
+
+		//opens display GUI (separate window)
+		//implement logic
+	}
+
+	int display_drivers_rad_pressed() {  //NEEDS LOGIC
+		display_customers_all.hide();
+		display_customers_neg.hide();
+		display_drivers_all.hide();
+		display_drivers_tag.hide();
+		display_drivers_rad.hide();
+		display_drivers_radius.hide();
+		display_places_all.hide();
+		display_places_withtag.hide();
+		display_places_tag.hide();
+		display_size_menu.hide();
+		show_menu();
+		stringstream ss;
+		double radius;
+		ss << display_drivers_radius.get_string();
+		ss >> radius;
+		string tag = display_drivers_tag.get_string();
+		vector<Driver> drivs = find_driver_within(tag, radius);
+
+		switch (disp_size) {
+		default:
+			Disp_2 rad_driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", drivs);
+			return gui_main();
+		}
+		//opens display GUI (separate window)
+		//implement logic
+	}
+
+	int display_places_all_pressed() {
 		display_customers_all.hide();
 		display_customers_neg.hide();
 		display_drivers_all.hide();
@@ -329,9 +428,16 @@ private:
 		show_menu();
 		//opens display GUI (separate window)
 		//implement logic
+
+		switch (disp_size) {
+		default:
+			Disp_2 all_place(Point(x_max() - 600, y_max() - 600), 600, 600,
+				"Places", get_places());
+			return gui_main();
+		}
 	}
 
-	void display_customers_neg_pressed() {
+	int display_places_withtag_pressed() {
 		display_customers_all.hide();
 		display_customers_neg.hide();
 		display_drivers_all.hide();
@@ -343,83 +449,30 @@ private:
 		display_places_tag.hide();
 		display_size_menu.hide();
 		show_menu();
+
+		string tag = display_places_tag.get_string();
+
+		switch (disp_size) {
+		default:
+			Disp_2 tag_places(Point(x_max() - 600, y_max() - 600), 600, 600,
+				"Places with tags", find_places_tags(tag));
+			return gui_main();
+		}
 		//opens display GUI (separate window)
 		//implement logic
 	}
-
-	void display_drivers_all_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-		//opens display GUI (separate window)
-		//implement logic
-	}
-
-	void display_drivers_rad_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-		//opens display GUI (separate window)
-		//implement logic
-	}
-
-	void display_places_all_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-		//opens display GUI (separate window)
-		//implement logic
-	}
-
-	void display_places_withtag_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-		//opens display GUI (separate window)
-		//implement logic
-	}
-
 
 	int display_2_pressed() {
-		Disp_2 driver_disp(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", get_drivers());
-		return gui_main();
+		disp_size = 2;
 	};
 
-	void display_3_pressed() {};
+	void display_3_pressed() {
+		disp_size = 3;
+	};
 
-	void display_4_pressed() {};
+	void display_4_pressed() {
+		disp_size = 4;
+	};
 
 	void menu_pressed() {
 		first_menu.show();
@@ -662,7 +715,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		Point(250, 460),
 		100, 40,
 		"Within Radius",
-		cb_display_customers_neg),
+		cb_display_drivers_rad),
 
 	display_places_all(
 		Point(450, 350),
