@@ -128,8 +128,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 70, 5),
-			70, 20,
+			Point(x_max() - 100, 0),
+			100, 40,
 			"Quit",
 			cb_quit
 		),
@@ -209,8 +209,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 70, 5),
-			70, 20,
+			Point(x_max() - 100, 0),
+			100, 40,
 			"Quit",
 			cb_quit
 		),
@@ -290,8 +290,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 70, 5),
-			70, 20,
+			Point(x_max() - 100, 0),
+			100, 40,
 			"Quit",
 			cb_quit
 		),

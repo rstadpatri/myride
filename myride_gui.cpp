@@ -6,6 +6,7 @@
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
 #include "display_gui_2_by_2.h"
+#include "display_gui_4_by_4.h"
 
 using namespace Graph_lib;
 using namespace std;
@@ -60,18 +61,56 @@ private:
 	Button display_places_withtag;
 	In_box display_places_tag;
 	Menu display_size_menu;
+	Button back_button;
 
 	char add_indicator;
 	char remove_indicator;
 	int nametag_indicator;
-	int disp_size;
+	int disp_size = 2;
 
 	//function members
 	void hide_menu() {
 		first_menu.hide();
+		back_button.show();
 	}
 
 	void show_menu() {
+		add_customer_button.hide();
+		add_driver_button.hide();
+		add_place_button.hide();
+		add_name.hide();
+		add_balance.hide();
+		add_driver_place.hide();
+		add_lat.hide();
+		add_lon.hide();
+		add_tags.hide();
+		add_photo_loc.hide();
+		add_submit.hide();
+		remove_name.hide();
+		remove_submit.hide();
+		remove_customer.hide();
+		remove_driver.hide();
+		remove_place.hide();
+		request_placeA_name.hide();
+		request_placeB_name.hide();
+		request_customer_name.hide();
+		request_tag.hide();
+		request_name.hide();
+		request_info.hide();
+		request_submit.hide();
+		request_summary.hide();
+		request_okay.hide();
+		display_customers_all.hide();
+		display_customers_neg.hide();
+		display_drivers_all.hide();
+		display_drivers_tag.hide();
+		display_drivers_rad.hide();
+		display_drivers_radius.hide();
+		display_places_all.hide();
+		display_places_withtag.hide();
+		display_places_tag.hide();
+		display_size_menu.hide();
+		back_button.hide();
 		first_menu.show();
 	}
 
@@ -132,18 +171,6 @@ private:
 	}
 
 	void add_submit_pressed() {
-		add_customer_button.hide();
-		add_driver_button.hide();
-		add_place_button.hide();
-		add_name.hide();
-		add_balance.hide();
-		add_driver_place.hide();
-		add_lat.hide();
-		add_lon.hide();
-		add_tags.hide();
-		add_photo_loc.hide();
-		add_submit.hide();
-
 		string name = add_name.get_string();
 		string photo_loc = add_photo_loc.get_string();
 		double balance;
@@ -232,16 +259,9 @@ private:
 	}
 
 	void remove_submit_pressed() {
-		remove_name.hide();
-		remove_submit.hide();
-		remove_customer.hide();
-		remove_driver.hide();
-		remove_place.hide();
-		show_menu();
-
 		string name = remove_name.get_string();
-
 		remove_member(remove_indicator, name);
+		show_menu();
 	}
 
 	void request_pressed() {
@@ -297,8 +317,6 @@ private:
 	}
 
 	void request_okay_pressed() {
-		request_summary.hide();
-		request_okay.hide();
 		show_menu();
 	}
 
@@ -317,69 +335,53 @@ private:
 	}
 
 	int display_customers_all_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-
 		switch (disp_size) {
-		default:
-			Disp_2 customer_disp(Point(x_max() - 600, y_max() - 600), 600, 600, 
+		case 2: {
+			Disp_2 customer_disp2(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"All Customers", get_customers());
 			return gui_main();
 		}
-		//opens display GUI (separate window)
-		//implement logic
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 customer_disp4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"All Customers", get_customers());
+			return gui_main();
+		}
+		}
 	}
 
 	int display_customers_neg_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-
 		switch (disp_size) {
-		default:
-			Disp_2 cust_neg(Point(x_max() - 600, y_max() - 600), 600, 600, 
+		case 2: {
+			Disp_2 cust_neg(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"Negative Customers", find_neg_customer());
 			return gui_main();
 		}
-		//opens display GUI (separate window)
-		//implement logic
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"Negative Customers", find_neg_customer());
+			return gui_main();
+		}
+		}
 	}
 
 	int display_drivers_all_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-
 		switch (disp_size) {
-		default:
-			Disp_2 driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600, 
-				"All Customers", get_drivers());
+		case 2: {
+			Disp_2 driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600,
+				"All Drivers", get_drivers());
 			return gui_main();
+		}
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"All Drivers", get_drivers());
+			return gui_main();
+		}
 		}
 
 		//opens display GUI (separate window)
@@ -387,17 +389,6 @@ private:
 	}
 
 	int display_drivers_rad_pressed() {  //NEEDS LOGIC
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
 		stringstream ss;
 		double radius;
 		ss << display_drivers_radius.get_string();
@@ -406,60 +397,54 @@ private:
 		vector<Driver> drivs = find_driver_within(tag, radius);
 
 		switch (disp_size) {
-		default:
+		case 2: {
 			Disp_2 rad_driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", drivs);
 			return gui_main();
 		}
-		//opens display GUI (separate window)
-		//implement logic
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 rad_driv_disp4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"Drivers", drivs);
+			return gui_main();
+		}
+		}
 	}
 
 	int display_places_all_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-		//opens display GUI (separate window)
-		//implement logic
-
 		switch (disp_size) {
-		default:
+		case 2: {
 			Disp_2 all_place(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"Places", get_places());
 			return gui_main();
 		}
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"Places", get_places());
+			return gui_main();
+		}
+		}
 	}
 
 	int display_places_withtag_pressed() {
-		display_customers_all.hide();
-		display_customers_neg.hide();
-		display_drivers_all.hide();
-		display_drivers_tag.hide();
-		display_drivers_rad.hide();
-		display_drivers_radius.hide();
-		display_places_all.hide();
-		display_places_withtag.hide();
-		display_places_tag.hide();
-		display_size_menu.hide();
-		show_menu();
-
 		string tag = display_places_tag.get_string();
 
 		switch (disp_size) {
-		default:
+		case 2: {
 			Disp_2 tag_places(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"Places with tags", find_places_tags(tag));
 			return gui_main();
 		}
-		//opens display GUI (separate window)
-		//implement logic
+		case 3:
+			return 1;
+		case 4: {
+			Disp_4 tag_places4(Point(x_max() - 800, y_max() - 800), 800, 800,
+				"Places with tags", find_places_tags(tag));
+			return gui_main();
+		}
+		}
 	}
 
 	int display_2_pressed() {
@@ -511,6 +496,7 @@ private:
 	static void cb_4(Address, Address);
 	static void cb_request_name(Address, Address);
 	static void cb_request_tag(Address, Address);
+	static void cb_back_button(Address, Address);
 
 };
 
@@ -523,6 +509,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		100, 40,
 		"Quit",
 		cb_quit),
+
+	back_button(
+		Point(0, 0),
+		100, 40,
+		"Back",
+		cb_back_button),
 
 	first_menu(
 		Point(x_max() / 2 - 50, y_max() / 6),
@@ -776,6 +768,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(display_places_all);
 	attach(display_places_tag);
 	attach(display_places_withtag);
+	attach(back_button);
 
 
 	add_customer_button.hide();
@@ -813,6 +806,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	display_places_all.hide();
 	display_places_tag.hide();
 	display_places_withtag.hide();
+	back_button.hide();
 
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "2 x 2", cb_2));
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "3 x 3", cb_3));
@@ -935,6 +929,10 @@ void User_window::cb_4(Address, Address pw) {
 
 void User_window::cb_menu(Address, Address pw) {
 	reference_to<User_window>(pw).menu_pressed();
+}
+
+void User_window::cb_back_button(Address, Address pw) {
+	reference_to<User_window>(pw).show_menu();
 }
 
 int main() {
