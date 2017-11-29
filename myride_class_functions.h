@@ -11,10 +11,12 @@ namespace funct_lib {
 		// Formula for calculating distance between waypoints
 
 	class Member {
+		// Base class for drivers, places, and customers
 		string name;
 		string photo_loc;
 
 	protected:
+		// Constructors
 		Member(string s) : name(s), photo_added(false), photo_loc("default") {}
 		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {}
 		Member() {}
@@ -29,7 +31,7 @@ namespace funct_lib {
 		virtual string display() {
 			return "Virtual function error";
 		}
-		string export_photo() {
+		string export_photo() { // Used for writing to master data file
 			string to_print = " ";
 			if (photo_added) {
 				to_print += "1 " + photo_loc;
@@ -41,11 +43,14 @@ namespace funct_lib {
 	};
 
 	class Place : public Member {
+		// Derived class
 		double lat;
 		double lon;
 		vector<string> tags;
 
 	public:
+		// Constructors
+
 		Place(string n, double lat, double lon)
 			: Member(n), lat(lat), lon(lon) {}
 
@@ -79,6 +84,7 @@ namespace funct_lib {
 		}
 
 		string display() {
+			// Used for GUI display information
 			string for_display;
 			for_display = get_name() + "\n";
 			for (unsigned int i = 0; i < tags.size(); ++i) {
@@ -102,6 +108,7 @@ namespace funct_lib {
 		double balance;
 
 	public:
+		// Constructors
 		Customer(string n) : Member(n), balance(0) {}
 		Customer(string n, double bal) : Member(n), balance(bal) {};
 		Customer(string n, double bal, string photo_loc) : Member(n, photo_loc), balance(bal) {};

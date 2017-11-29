@@ -33,7 +33,7 @@ namespace disp_lib {
 		vector<Customer> c_members;
 		vector<Place> p_members;
 		int screen_num;
-		char type;
+		char type;  // Helps differentiate between drivers, customers, and places
 
 		//widgets:
 		Text format;
@@ -556,11 +556,12 @@ namespace disp_lib {
 
 
 
-	//callback functions for buttons
+	// All functions for buttons
 	void Disp_4::cb_quit(Address, Address pw) {
 		reference_to<Disp_4>(pw).quit();
 	}
 
+	// Closes window
 	void Disp_4::quit() {
 		hide();
 	}
@@ -569,6 +570,7 @@ namespace disp_lib {
 		reference_to<Disp_4>(pw).previous_pressed();
 	}
 
+	// Detach functions remove all members from screen
 	void Disp_4::detach_all_d() {
 		if (d_members.size() >= screen_num * 16 + 1) {
 			detach(member1_info);
@@ -769,7 +771,8 @@ namespace disp_lib {
 			detach(*member_images[screen_num * 16 + 15]);
 		}
 	}
-
+	
+	// Attach functions add new members to screen based on screen number
 	void Disp_4::attach_all_d() {
 		if (d_members.size() >= screen_num * 16 + 1) {
 			attach(member1_info);
@@ -1020,6 +1023,7 @@ namespace disp_lib {
 		}
 	}
 
+	// Next members calls detach_all, increments screen size, then calls attach_all
 	void Disp_4::next_members_d() {
 		// 4 items per screen (0-3), (4-7), (8-11), ...
 		// Screen:          0      1      2     ...
@@ -1078,6 +1082,7 @@ namespace disp_lib {
 		reference_to<Disp_4>(pw).next_pressed();
 	}
 
+	// Previous members calls detach_all, decrements screen size, then calls attach_all
 	void Disp_4::previous_members_d() {
 		// Clean up screen
 		detach_all_d();
