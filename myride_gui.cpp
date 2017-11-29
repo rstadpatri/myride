@@ -330,7 +330,10 @@ private:
 		request_name.hide();
 		request_info.hide();
 		request_submit.hide();
-	
+
+		string loc_name = request_placeA_name.get_string();
+		string customer_name = request_customer_name.get_string();
+		string dest_name = request_placeB_name.get_string();
 
 		if (loc_name != "" &&
 			customer_name != "" &&
