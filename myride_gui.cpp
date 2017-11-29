@@ -276,8 +276,9 @@ private:
 	//removes the information relating to the inputted name
 	void remove_submit_pressed() {
 		string name = remove_name.get_string();
-		remove_member(remove_indicator, name);
-		show_menu();
+		if (name != "") {
+			remove_member(remove_indicator, name);
+		}
 	}
 
 	//shows request menu
@@ -324,10 +325,7 @@ private:
 		request_name.hide();
 		request_info.hide();
 		request_submit.hide();
-
-		string loc_name = request_placeA_name.get_string();
-		string customer_name = request_customer_name.get_string();
-		string dest_name = request_placeB_name.get_string();
+	
 
 		string summary = request_ride(customer_name, loc_name, nametag_indicator, dest_name);
 
