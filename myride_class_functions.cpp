@@ -33,7 +33,8 @@
 		return radian;
 	}
 
-	double distance_between(double x1d, double y1d, double x2d, double y2d) {  // Formula for calculating distance between waypoints
+	double distance_between(double x1d, double y1d, double x2d, double y2d) {  
+		// Formula for calculating distance between waypoints
 		double x1 = to_radian(x1d);
 		double y1 = to_radian(y1d);
 		double x2 = to_radian(x2d);
@@ -71,7 +72,8 @@
 
 	}
 
-	double find_distance(Place x, Place y) {  //Essentially a more user friendly distance_between function, takes Place_info as an input.
+	double find_distance(Place x, Place y) {  
+		//Essentially a more user friendly distance_between function, takes Place_info as an input.
 		double distance = distance_between(x.get_latitude(), x.get_longitude(), y.get_latitude(), y.get_longitude());
 		return distance;
 	}
@@ -99,7 +101,7 @@
 		}
 	}
 
-	void remove_member(char c, string name) {  //GUI will need to provide call with different types of classes
+	void remove_member(char c, string name) { 
 		switch (c) {
 		case 'c':
 			for (unsigned int i = 0; i < customers.size(); ++i) {
@@ -130,7 +132,6 @@
 	}
 
 	void add_driver(string name, double balance, Place loc, string photo_loc) {
-		//Did not error check for proper input types when using cin. Also did not check for in-range latitude and longitude.
 		//Adds a driver to the program; includes name, driver number, and current coordinates
 
 		if (photo_loc == "") {
@@ -144,12 +145,13 @@
 	}
 
 	vector<Place> ride_ordest(string location, int nametag, string destination_tag) {
-
+		// Returns the origin and destination of the ride
 		vector<Place> ordest;
 
 		for (unsigned int i = 0; i < places.size(); ++i) {
 			if (location == places[i].get_name()) {
 				ordest.push_back(places[i]);
+				i = places.size();
 			}
 		}
 
@@ -210,6 +212,7 @@
 	}
 
 	vector<Driver> find_driver_within(string tag, double radius) {
+		// Finds all drivers within radius of all locations with tag
 		vector<Driver> eligible_drivers;
 		vector<Place> possible_places;
 		for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
@@ -240,6 +243,7 @@
 	}
 
 	vector<Place> find_places_tags(string tag) {
+		// Finds all places with a certain tag
 		vector<Place> tagged_places;
 		for (unsigned int i = 0; i < places.size(); ++i) {
 			vector<string> tags = places[i].get_tags();
@@ -295,7 +299,7 @@
 	}
 
 	void import_data() {
-		//Imports data from a file. Function returns string of filename for future overwriting.
+		//Imports data from the master file. 
 
 		try {
 			ifstream ist{ "Data File" };
@@ -379,7 +383,6 @@
 
 	void export_data() {
 		//Simply writes all information back out to file in the proper format.
-		//If improper filename was given, info is written to file name "null"
 
 		try {
 			ofstream ost{ filename };
@@ -413,5 +416,4 @@
 			keep_window_open("x");
 		}
 	}
-
 	}

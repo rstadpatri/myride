@@ -192,12 +192,17 @@ private:
 		switch (add_indicator) {
 		//adds customer information
 		case 'c':
+			if (name == "") break;
+			if (add_balance.get_string() == "") break;
 			convert << add_balance.get_string();
 			convert >> balance;
 			add_customer(name, balance, photo_loc);
 			break;
 		//adds driver information
 		case 'd':
+			if (name == "") break;
+			if (add_balance.get_string() == "") break;
+			if (add_driver_place.get_string() == "") break;
 			convert << add_balance.get_string();
 			convert >> balance;
 			place_name = add_driver_place.get_string();
@@ -211,6 +216,8 @@ private:
 			break;
 		//adds place information
 		case'p':
+			if (add_lat.get_string() == "") break;
+			if (add_lon.get_string() == "") break;
 			double lat;
 			double lon;
 
@@ -228,8 +235,6 @@ private:
 			add_place(name, lat, lon, tags, photo_loc);
 			break;
 		}
-
-		show_menu();
 	}
 
 	//hides main menu and displays remove menu
@@ -327,11 +332,16 @@ private:
 		request_submit.hide();
 	
 
-		string summary = request_ride(customer_name, loc_name, nametag_indicator, dest_name);
+		if (loc_name != "" &&
+			customer_name != "" &&
+			dest_name != "")
+		{
+			string summary = request_ride(customer_name, loc_name, nametag_indicator, dest_name);
 
-		request_summary.show();
-		request_summary.put(summary);
-		request_okay.show();
+			request_summary.show();
+			request_summary.put(summary);
+			request_okay.show();
+		}
 	}
 
 	void request_okay_pressed() {
