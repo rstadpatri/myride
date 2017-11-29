@@ -4,7 +4,7 @@
 #include "GUI.h"
 #include "Window.h"
 #include "std_lib_facilities_4.h"
-#include "myride_class_functions.h"
+#include "myride_class_functions.h" //functions we created 
 #include "display_gui_2_by_2.h"
 #include "display_gui_4_by_4.h"
 
@@ -23,6 +23,7 @@ struct User_window : Graph_lib::Window {
 
 private:
 	//widgets:
+	//all buttons for the menus throughout the program
 	Menu first_menu;
 	Button quit_button;
 	Button add_customer_button;
@@ -63,6 +64,7 @@ private:
 	Menu display_size_menu;
 	Button back_button;
 
+	//switch case
 	char add_indicator;
 	char remove_indicator;
 	int nametag_indicator;
@@ -74,6 +76,7 @@ private:
 		back_button.show();
 	}
 
+	//main menu hides all buttons except for initial menu
 	void show_menu() {
 		add_customer_button.hide();
 		add_driver_button.hide();
@@ -114,14 +117,15 @@ private:
 		first_menu.show();
 	}
 
+	//hides main menu and shows three add buttons
 	void add_pressed() {
-		//add menu here
 		hide_menu();
 		add_customer_button.show();
 		add_driver_button.show();
 		add_place_button.show();
 	}
 
+	//hides customer button and shows add customer menu
 	void add_customer_pressed() {
 		add_indicator = 'c';
 
@@ -137,7 +141,8 @@ private:
 		add_photo_loc.show();
 		add_submit.show();
 	}
-
+	
+	//hides driver button and shows add driver menu
 	void add_driver_pressed() {
 		add_indicator = 'd';
 
@@ -154,6 +159,7 @@ private:
 		add_submit.show();
 	}
 
+	//hides place button and shows add place menu
 	void add_place_pressed() {
 		add_indicator = 'p';
 
@@ -170,6 +176,7 @@ private:
 		add_submit.show();
 	}
 
+	//submits information from the add customer, driver, and place menus
 	void add_submit_pressed() {
 		string name = add_name.get_string();
 		string photo_loc = add_photo_loc.get_string();
@@ -181,12 +188,15 @@ private:
 		string hold;
 		vector<Place>& places = get_places();
 
+		//switch case that implements logic into the menus
 		switch (add_indicator) {
+		//adds customer information
 		case 'c':
 			convert << add_balance.get_string();
 			convert >> balance;
 			add_customer(name, balance, photo_loc);
 			break;
+		//adds driver information
 		case 'd':
 			convert << add_balance.get_string();
 			convert >> balance;
@@ -199,6 +209,7 @@ private:
 			}
 			add_driver(name, balance, loc, photo_loc);
 			break;
+		//adds place information
 		case'p':
 			double lat;
 			double lon;
@@ -221,6 +232,7 @@ private:
 		show_menu();
 	}
 
+	//hides main menu and displays remove menu
 	void remove_pressed() {
 		hide_menu();
 		remove_customer.show();
@@ -228,6 +240,7 @@ private:
 		remove_place.show();
 	}
 
+	//hides customer button and shows name in box
 	void remove_customer_pressed() {
 		remove_name.show();
 		remove_submit.show();
@@ -238,6 +251,7 @@ private:
 		remove_indicator = 'c';
 	}
 
+	//hides driver button and shows name in box
 	void remove_driver_pressed() {
 		remove_name.show();
 		remove_submit.show();
@@ -248,6 +262,7 @@ private:
 		remove_indicator = 'd';
 	}
 
+	//hides place button and shows name in box
 	void remove_place_pressed() {
 		remove_name.show();
 		remove_submit.show();
@@ -258,12 +273,15 @@ private:
 		remove_indicator = 'p';
 	}
 
+	//removes the information relating to the inputted name
 	void remove_submit_pressed() {
 		string name = remove_name.get_string();
 		remove_member(remove_indicator, name);
 		show_menu();
 	}
 
+	//shows request menu
+	//contains in boxes for customer name, places A and B, and use tag button
 	void request_pressed() {
 		nametag_indicator = 1;
 		request_placeA_name.show();
@@ -284,6 +302,7 @@ private:
 		hide_menu();
 	}
 
+	//allows user to pick if they want to use customer name or tags
 	void request_name_pressed() {
 		request_name.hide();
 		request_tag.show();
@@ -296,6 +315,7 @@ private:
 		nametag_indicator = 2;
 	}
 
+	//hides request menu and displays outbox with information about the ride and the balances
 	void request_submit_pressed() {
 		request_placeA_name.hide();
 		request_placeB_name.hide();
@@ -320,6 +340,7 @@ private:
 		show_menu();
 	}
 
+	//shows display menu
 	void display_pressed() {
 		display_size_menu.show();
 		display_customers_all.show();
@@ -334,6 +355,7 @@ private:
 		hide_menu();
 	}
 
+	//displays all customers in a new window
 	int display_customers_all_pressed() {
 		switch (disp_size) {
 		case 2: {
@@ -351,6 +373,7 @@ private:
 		}
 	}
 
+	//displays all customers with a negative balance in a new window
 	int display_customers_neg_pressed() {
 		switch (disp_size) {
 		case 2: {
@@ -368,6 +391,7 @@ private:
 		}
 	}
 
+	//displays all drivers in a new window
 	int display_drivers_all_pressed() {
 		switch (disp_size) {
 		case 2: {
@@ -388,6 +412,7 @@ private:
 		//implement logic
 	}
 
+	//displays all drivers within the radius that the user inputs
 	int display_drivers_rad_pressed() {  //NEEDS LOGIC
 		stringstream ss;
 		double radius;
@@ -411,6 +436,7 @@ private:
 		}
 	}
 
+	//displays all places in a new window
 	int display_places_all_pressed() {
 		switch (disp_size) {
 		case 2: {
@@ -428,6 +454,7 @@ private:
 		}
 	}
 
+	//displays all places with the tag that the user inputs
 	int display_places_withtag_pressed() {
 		string tag = display_places_tag.get_string();
 
@@ -447,6 +474,7 @@ private:
 		}
 	}
 
+	//allows user to pick how many people they want to display on each page- 4, 9, or 16
 	int display_2_pressed() {
 		disp_size = 2;
 	};
@@ -463,12 +491,13 @@ private:
 		first_menu.show();
 	}
 
+	//submits data and exits the program
 	void quit() {
 		export_data();
 		hide();
 	}
 
-	//callback functions
+	//callback functions for buttons throughout the program
 	static void cb_add(Address, Address);
 	static void cb_remove(Address, Address);
 	static void cb_request(Address, Address);
@@ -504,6 +533,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	//initialization
 	Window(xy, w, h, title),
 
+	//this section contains the location, size, and name for every button and input/output box
 	quit_button(
 		Point(x_max() / 2 - 50, y_max() - 40),
 		100, 40,
@@ -732,6 +762,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 
 {
 	//constructor body
+	//attaches all buttons to the desired window
 	attach(quit_button);
 	attach(add_customer_button);
 	attach(add_driver_button);
@@ -770,7 +801,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(display_places_withtag);
 	attach(back_button);
 
-
+	//sets all buttons to be hidden as a default
 	add_customer_button.hide();
 	add_driver_button.hide();
 	add_place_button.hide();
@@ -808,6 +839,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	display_places_withtag.hide();
 	back_button.hide();
 
+	//attaches the menus to the window
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "2 x 2", cb_2));
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "3 x 3", cb_3));
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "4 x 4", cb_4));
