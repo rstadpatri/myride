@@ -6,6 +6,7 @@
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h" //functions we created 
 #include "display_gui_2_by_2.h"
+#include "display_gui_3_by_3.h"
 #include "display_gui_4_by_4.h"
 
 using namespace Graph_lib;
@@ -374,8 +375,11 @@ private:
 				"All Customers", get_customers());
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 customer_disp3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"All Customers", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 customer_disp4(Point(x_max() - 800, y_max() - 800), 800, 800,
 				"All Customers", get_customers());
@@ -388,12 +392,15 @@ private:
 	int display_customers_neg_pressed() {
 		switch (disp_size) {
 		case 2: {
-			Disp_2 cust_neg(Point(x_max() - 600, y_max() - 600), 600, 600,
+			Disp_2 cust_neg2(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"Negative Customers", find_neg_customer());
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 cust_neg3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"Negative Customers", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
 				"Negative Customers", find_neg_customer());
@@ -406,12 +413,15 @@ private:
 	int display_drivers_all_pressed() {
 		switch (disp_size) {
 		case 2: {
-			Disp_2 driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600,
+			Disp_2 driv_disp2(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"All Drivers", get_drivers());
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 driv_disp3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"All Drivers", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
 				"All Drivers", get_drivers());
@@ -434,11 +444,14 @@ private:
 
 		switch (disp_size) {
 		case 2: {
-			Disp_2 rad_driv_disp(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", drivs);
+			Disp_2 rad_driv_disp2(Point(x_max() - 600, y_max() - 600), 600, 600, "Drivers", drivs);
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 red_driv_disp3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"All Drivers", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 rad_driv_disp4(Point(x_max() - 800, y_max() - 800), 800, 800,
 				"Drivers", drivs);
@@ -451,15 +464,18 @@ private:
 	int display_places_all_pressed() {
 		switch (disp_size) {
 		case 2: {
-			Disp_2 all_place(Point(x_max() - 600, y_max() - 600), 600, 600,
-				"Places", get_places());
+			Disp_2 all_place2(Point(x_max() - 600, y_max() - 600), 600, 600,
+				"All Places", get_places());
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 all_place3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"All Places", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 cust_neg4(Point(x_max() - 800, y_max() - 800), 800, 800,
-				"Places", get_places());
+				"All Places", get_places());
 			return gui_main();
 		}
 		}
@@ -471,12 +487,15 @@ private:
 
 		switch (disp_size) {
 		case 2: {
-			Disp_2 tag_places(Point(x_max() - 600, y_max() - 600), 600, 600,
+			Disp_2 tag_places2(Point(x_max() - 600, y_max() - 600), 600, 600,
 				"Places with tags", find_places_tags(tag));
 			return gui_main();
 		}
-		case 3:
-			return 1;
+		case 3: {
+			Disp_3 tag_places3(Point(x_max() - 700, y_max() - 700), 700, 700,
+				"Places with tags", get_drivers());
+			return gui_main();
+		}
 		case 4: {
 			Disp_4 tag_places4(Point(x_max() - 800, y_max() - 800), 800, 800,
 				"Places with tags", find_places_tags(tag));
