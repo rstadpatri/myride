@@ -377,7 +377,7 @@ private:
 		}
 		case 3: {
 			Disp_3 customer_disp3(Point(x_max() - 700, y_max() - 700), 700, 700,
-				"All Customers", get_drivers());
+				"All Customers", get_customers());
 			return gui_main();
 		}
 		case 4: {
@@ -398,7 +398,7 @@ private:
 		}
 		case 3: {
 			Disp_3 cust_neg3(Point(x_max() - 700, y_max() - 700), 700, 700,
-				"Negative Customers", get_drivers());
+				"Negative Customers", find_neg_customer());
 			return gui_main();
 		}
 		case 4: {
@@ -449,7 +449,7 @@ private:
 		}
 		case 3: {
 			Disp_3 red_driv_disp3(Point(x_max() - 700, y_max() - 700), 700, 700,
-				"All Drivers", get_drivers());
+				"All Drivers", drivs);
 			return gui_main();
 		}
 		case 4: {
@@ -470,7 +470,7 @@ private:
 		}
 		case 3: {
 			Disp_3 all_place3(Point(x_max() - 700, y_max() - 700), 700, 700,
-				"All Places", get_drivers());
+				"All Places", get_places());
 			return gui_main();
 		}
 		case 4: {
@@ -493,7 +493,7 @@ private:
 		}
 		case 3: {
 			Disp_3 tag_places3(Point(x_max() - 700, y_max() - 700), 700, 700,
-				"Places with tags", get_drivers());
+				"Places with tags", find_places_tags(tag));
 			return gui_main();
 		}
 		case 4: {
