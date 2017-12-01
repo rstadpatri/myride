@@ -259,41 +259,54 @@
 
 	string request_ride(string customer_name, string location, int nametag, string destination_tag) {
 		//Finds driver, finds distance, credits driver account, changes driver's location, debits customer account, prints summary
-
+		bool function_worked = true;
 		vector<Place> ordest = ride_ordest(location, nametag, destination_tag);  // Returns vector with origin and destination
-		int designated_driver = find_driver(ordest); //Returns driver with closest driver
+		if (ordest.size() != 2) function_worked = false;
+		string summary;
+		if (function_worked) {
+			int designated_driver = find_driver(ordest); //Returns index of closest driver
 
-		double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
-		drivers[designated_driver].add_funds(distance*.5);  //Credits the driver's balance
-		drivers[designated_driver].change_place(ordest[1]); //Changes driver's location
+			double distance = find_distance(ordest[0], ordest[1]);  //Returns distance between PLACE A and PLACE B
+			drivers[designated_driver].add_funds(distance*.5);  //Credits the driver's balance
+			drivers[designated_driver].change_place(ordest[1]); //Changes driver's location
 
-		Customer designated_customer = customers[0]; //Initialization of customer requesting ride
-		for (unsigned int i = 0; i < customers.size(); ++i) {
-			if (customers[i].get_name() == customer_name) {
-				customers[i].make_payment(distance);
-				designated_customer = customers[i];
+			bool customer_found = false;
+			Customer designated_customer = customers[0]; //Initialization of customer requesting ride
+			for (unsigned int i = 0; i < customers.size(); ++i) {
+				if (customers[i].get_name() == customer_name) {
+					customers[i].make_payment(distance);
+					designated_customer = customers[i];
+					customer_found = true;
+				}
+			}
+
+			//Summary of transaction
+			if (customer_found) {
+				stringstream sm;
+				string dist;
+				sm << fixed << setprecision(2);
+				sm << distance;
+				sm >> dist;
+				sm.clear();
+
+				string halfdist;
+				sm << distance / 2;
+				sm >> halfdist;
+
+				summary = "\n" + drivers[designated_driver].get_name() + " has driven "
+					+ designated_customer.get_name() + " from " + ordest[0].get_name() + " to "
+					+ ordest[1].get_name() + ".\n" + drivers[designated_driver].get_name()
+					+ "'s account has been credited with $" + halfdist + ".\nAnd "
+					+ designated_customer.get_name() + "'s account has been charged $"
+					+ dist + ".\n";
+			}
+			else {
+				summary = "Ride Request could not be completed";
 			}
 		}
-
-		//Summary of transaction
-
-		stringstream sm;
-		string dist;
-		sm << fixed << setprecision(2);
-		sm << distance;
-		sm >> dist;
-		sm.clear();
-
-		string halfdist;
-		sm << distance / 2;
-		sm >> halfdist;
-
-		string summary = "\n" + drivers[designated_driver].get_name() + " has driven " 
-			+ designated_customer.get_name() + " from " + ordest[0].get_name() + " to "
-			+ ordest[1].get_name() + ".\n" + drivers[designated_driver].get_name() 
-			+ "'s account has been credited with $" + halfdist + ".\nAnd " 
-			+ designated_customer.get_name() + "'s account has been charged $" 
-			+ dist + ".\n";
+		else {
+			summary = "Ride Request could not be completed";
+		}
 
 		return summary;
 	}

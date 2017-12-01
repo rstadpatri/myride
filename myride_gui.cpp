@@ -64,6 +64,7 @@ private:
 	In_box display_places_tag;
 	Menu display_size_menu;
 	Button back_button;
+	Out_box error;
 
 	//switch case
 	char add_indicator;
@@ -116,6 +117,8 @@ private:
 		display_size_menu.hide();
 		back_button.hide();
 		first_menu.show();
+		error.put("");
+		error.hide();
 	}
 
 	//hides main menu and shows three add buttons
@@ -179,6 +182,8 @@ private:
 
 	//submits information from the add customer, driver, and place menus
 	void add_submit_pressed() {
+		error.put("");
+		error.hide();
 		string name = add_name.get_string();
 		string photo_loc = add_photo_loc.get_string();
 		double balance;
@@ -188,22 +193,29 @@ private:
 		vector<string> tags;
 		string hold;
 		vector<Place>& places = get_places();
+		bool place_found = false;
 
 		//switch case that implements logic into the menus
 		switch (add_indicator) {
 		//adds customer information
 		case 'c':
-			if (name == "") break;
-			if (add_balance.get_string() == "") break;
+			if (name == "" || add_balance.get_string() == "") {
+				error.show();
+				error.put("Not all boxes filled in");
+				break;
+			}
 			convert << add_balance.get_string();
 			convert >> balance;
 			add_customer(name, balance, photo_loc);
 			break;
 		//adds driver information
 		case 'd':
-			if (name == "") break;
-			if (add_balance.get_string() == "") break;
-			if (add_driver_place.get_string() == "") break;
+			if (name == "" || add_balance.get_string() == ""
+				|| add_driver_place.get_string() == "") {
+				error.show();
+				error.put("Not all boxes filled in");
+				break;
+			}
 			convert << add_balance.get_string();
 			convert >> balance;
 			place_name = add_driver_place.get_string();
@@ -211,22 +223,43 @@ private:
 				if (places[i].get_name() == place_name) {
 					loc = places[i];
 					i = places.size();
+					place_found = true;
 				}
+			}
+			if (!place_found) {
+				error.show();
+				error.put("Place doesn't exist");
+				break;
 			}
 			add_driver(name, balance, loc, photo_loc);
 			break;
 		//adds place information
 		case'p':
-			if (add_lat.get_string() == "") break;
-			if (add_lon.get_string() == "") break;
+			if (name == "") {
+				error.show();
+				error.put("Not all boxes filled in");
+				break;
+			}
+			if (add_lat.get_string() == "") {
+				error.show();
+				error.put("Latitude out of range");
+				break;
+			}
+			if (add_lon.get_string() == "") {
+				error.show();
+				error.put("Longitude out of range");
+				break;
+			}
 			double lat;
 			double lon;
 
 			convert << add_lat.get_string();
 			convert >> lat;
+			if (abs(lat) > 90) break;
 			convert.clear();
 			convert << add_lon.get_string();
 			convert >> lon;
+			if (abs(lon) > 180) break;
 			convert.clear();
 			convert << add_tags.get_string();
 			while (!(convert.eof())) {
@@ -324,6 +357,8 @@ private:
 
 	//hides request menu and displays outbox with information about the ride and the balances
 	void request_submit_pressed() {
+		error.put("");
+		error.hide();
 		request_placeA_name.hide();
 		request_placeB_name.hide();
 		request_customer_name.hide();
@@ -345,6 +380,11 @@ private:
 			request_summary.show();
 			request_summary.put(summary);
 			request_okay.show();
+		}
+		else {
+			error.put("Inadequate information provided");
+			error.show();
+			show_menu();
 		}
 	}
 
@@ -575,6 +615,12 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 		100, 40,
 		"Back",
 		cb_back_button),
+
+	error(
+		Point(x_max() / 2 - 100, 5),
+		200, 20,
+		""
+		),
 
 	first_menu(
 		Point(x_max() / 2 - 50, y_max() / 6),
@@ -830,6 +876,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	attach(display_places_tag);
 	attach(display_places_withtag);
 	attach(back_button);
+	attach(error);
 
 	//sets all buttons to be hidden as a default
 	add_customer_button.hide();
@@ -868,6 +915,7 @@ User_window::User_window(Point xy, int w, int h, const string& title) :
 	display_places_tag.hide();
 	display_places_withtag.hide();
 	back_button.hide();
+	error.hide();
 
 	//attaches the menus to the window
 	display_size_menu.attach(new Button(Point(0, 0), 0, 0, "2 x 2", cb_2));
