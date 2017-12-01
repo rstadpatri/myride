@@ -61,10 +61,8 @@ namespace disp_lib {
 				break;
 			case 'c':
 				next_members_c();
-				break;
 			case 'p':
 				next_members_p();
-				break;
 			}
 		}
 
@@ -75,10 +73,8 @@ namespace disp_lib {
 				break;
 			case 'c':
 				previous_members_c();
-				break;
 			case 'p':
 				previous_members_p();
-				break;
 			}
 		}
 
