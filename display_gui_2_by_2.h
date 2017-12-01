@@ -33,7 +33,7 @@ namespace disp_lib {
 		vector<Customer> c_members;
 		vector<Place> p_members;
 		int screen_num;
-		char type;  // Helps differentiate between drivers, customers, and places
+		char type;
 
 		//widgets:
 		Text format;
@@ -56,8 +56,10 @@ namespace disp_lib {
 				break;
 			case 'c':
 				next_members_c();
+				break;
 			case 'p':
 				next_members_p();
+				break;
 			}
 		}
 
@@ -68,8 +70,10 @@ namespace disp_lib {
 				break;
 			case 'c':
 				previous_members_c();
+				break;
 			case 'p':
 				previous_members_p();
+				break;
 			}
 		}
 
@@ -105,9 +109,6 @@ namespace disp_lib {
 		static void cb_quit(Address, Address);
 	};
 
-
-	// Different Constructors for each type of vector (drivers, customers, and places)
-
 	Disp_2::Disp_2(Point xy, int w, int h, const string& title, const vector<Driver>& m) :
 		//initialization
 		Window(xy, w, h, title),
@@ -131,8 +132,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 100, 0),
-			100, 40,
+			Point(x_max() - 70, 5),
+			70, 20,
 			"Quit",
 			cb_quit
 		),
@@ -212,8 +213,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 100, 0),
-			100, 40,
+			Point(x_max() - 70, 5),
+			70, 20,
 			"Quit",
 			cb_quit
 		),
@@ -293,8 +294,8 @@ namespace disp_lib {
 		),
 
 		quit_button(
-			Point(x_max() - 100, 0),
-			100, 40,
+			Point(x_max() - 70, 5),
+			70, 20,
 			"Quit",
 			cb_quit
 		),
@@ -353,22 +354,19 @@ namespace disp_lib {
 
 
 
-	// All functions for buttons, including callbacks
+	//callback functions for buttons
 	void Disp_2::cb_quit(Address, Address pw) {
 		reference_to<Disp_2>(pw).quit();
 	}
 
-	// Closes window
 	void Disp_2::quit() {
 		hide();
 	}
 
-	// Moves back a screen
 	void Disp_2::cb_previous(Address, Address pw) {
 		reference_to<Disp_2>(pw).previous_pressed();
 	}
 
-	// All the detach functions remove present members from the screen
 	void Disp_2::detach_all_d() {
 		if (d_members.size() >= screen_num * 4 + 1) {
 			detach(member1_info);
@@ -426,14 +424,11 @@ namespace disp_lib {
 		}
 	}
 
-	// All the attach functions add new members to the screen based on the screen number
 	void Disp_2::attach_all_d() {
 		if (d_members.size() >= screen_num * 4 + 1) {
 			attach(member1_info);
 			member1_info.put(d_members[screen_num * 4].display());
 			attach(*member_images[screen_num * 4]);
-
-
 		}
 		if (d_members.size() >= screen_num * 4 + 2) {
 			attach(member2_info);
@@ -502,8 +497,6 @@ namespace disp_lib {
 		}
 	}
 
-	// All next member functions find the next four members to be displayed
-	// They do this by detaching, then incrementing the screen number, then attaching again
 	void Disp_2::next_members_d() {
 		// 4 items per screen (0-3), (4-7), (8-11), ...
 		// Screen:          0      1      2     ...
@@ -562,8 +555,6 @@ namespace disp_lib {
 		reference_to<Disp_2>(pw).next_pressed();
 	}
 
-	// All previous member functions find the previous four members to be displayed
-	// They do this by detaching, then decrementing the screen number, then detaching again
 	void Disp_2::previous_members_d() {
 		// Clean up screen
 		detach_all_d();
