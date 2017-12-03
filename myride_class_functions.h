@@ -24,7 +24,7 @@ namespace funct_lib {
 
 	protected:
 		// Constructors with and without a provided photo
-		Member(string s) : name(s), photo_added(false), photo_loc("default.jpg") {}
+		Member(string s) : name(s), photo_added(false), photo_loc("default") {}
 		Member(string s, string p) : name(s), photo_loc(p), photo_added(true) {}
 		
 		// Default constructor
