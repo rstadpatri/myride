@@ -1,19 +1,27 @@
+/*
+Nick Esposito, Nick Nelson, & Reuben Tadpatri
+Fall Semester 2017 (Nov - Dec)
+Solution to Final Project
+Based on samplegui.cpp presented in class
+*/
+
 #include <iostream>    // for i/o
 #include <sstream>     // for string streams
 #include "Graph.h"     // next 3 are for graphics library
 #include "GUI.h"
 #include "Window.h"
-#include "std_lib_facilities_4.h"
-#include "myride_class_functions.h" //functions we created 
-#include "display_gui_2_by_2.h"
-#include "display_gui_3_by_3.h"
-#include "display_gui_4_by_4.h"
+#include "std_lib_facilities_4.h" // standard library (provided)
+#include "myride_class_functions.h" // functions we created 
+#include "display_gui_2_by_2.h" // 2x2 display
+#include "display_gui_3_by_3.h" // 3x3 display
+#include "display_gui_4_by_4.h" // 4x4 display
 
-using namespace Graph_lib;
-using namespace std;
-using namespace funct_lib;
-using namespace disp_lib;
+using namespace Graph_lib; // GUI namespace
+using namespace std; // standard namespace
+using namespace funct_lib; // myride functionality namespace
+using namespace disp_lib; // display namespace
 
+// Definition of main GUI window
 struct User_window : Graph_lib::Window {
 
 	//constructor
@@ -65,11 +73,11 @@ private:
 	Menu display_size_menu;
 	Button back_button;
 
-	//switch case
+	//switch case indicators
 	char add_indicator;
 	char remove_indicator;
 	int nametag_indicator;
-	int disp_size = 2;
+	int disp_size = 2; // default to 2x2
 
 	//function members
 	void hide_menu() {
@@ -367,6 +375,10 @@ private:
 		hide_menu();
 	}
 
+	// ---------------------------- DISPLAY PORTION ------------------------------------
+	// Each display option launches a new GUI window featuring a 2x2, 3x3, or 4x4 display
+	// interface for the user to cycle through
+
 	//displays all customers in a new window
 	int display_customers_all_pressed() {
 		switch (disp_size) {
@@ -428,13 +440,10 @@ private:
 			return gui_main();
 		}
 		}
-
-		//opens display GUI (separate window)
-		//implement logic
 	}
 
 	//displays all drivers within the radius that the user inputs
-	int display_drivers_rad_pressed() {  //NEEDS LOGIC
+	int display_drivers_rad_pressed() {
 		stringstream ss;
 		double radius;
 		ss << display_drivers_radius.get_string();
@@ -559,6 +568,7 @@ private:
 
 };
 
+// Constructor definition
 User_window::User_window(Point xy, int w, int h, const string& title) :
 	//initialization
 	Window(xy, w, h, title),
@@ -998,11 +1008,16 @@ void User_window::cb_back_button(Address, Address pw) {
 }
 
 int main() {
+	// Run in a try block to catch errors
 	try {
+		// Read in data
 		import_data();
+
+		// Create main GUI window
 		User_window win(Point(100, 100), 600, 600, "My Ride");
 		return gui_main();
 	}
+	// Catch block for interpreting any errors
 	catch (exception& e) {
 		cerr << "exception: " << e.what() << '\n';
 		return 1;

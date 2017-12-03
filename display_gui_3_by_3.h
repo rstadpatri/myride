@@ -1,3 +1,10 @@
+/*
+Nick Esposito, Nick Nelson, & Reuben Tadpatri
+Fall Semester 2017 (Nov - Dec)
+Solution to Final Project
+Based on samplegui.cpp
+*/
+
 #include "std_lib_facilities_4.h"
 #include "myride_class_functions.h"
 #include <sstream>     // for string streams
@@ -13,14 +20,15 @@ namespace disp_lib {
 	using namespace Graph_lib;
 	using namespace std;
 
+	// 3x3 display window
 	struct Disp_3 : Graph_lib::Window {
 
-		//constructor
+		//constructors for Drivers, Customers, Places
 		Disp_3(Point xy, int w, int h, const string& title, const vector<Driver>& m);
 		Disp_3(Point xy, int w, int h, const string& title, const vector<Customer>& m);
 		Disp_3(Point xy, int w, int h, const string& title, const vector<Place>& m);
 
-		//destructor
+		//destructor (needed for pointers to images)
 		~Disp_3() {
 			for (int i = 0; i < member_images.size(); ++i) {
 				delete member_images[i];
@@ -54,59 +62,61 @@ namespace disp_lib {
 		Button previous_button;
 		Button quit_button;
 
+		// Display next set of members
 		void next_pressed() {
-			switch (type) {
-			case 'd':
+			switch (type) { // function called based on members being displayed
+			case 'd': // drivers
 				next_members_d();
 				break;
-			case 'c':
+			case 'c': // customers
 				next_members_c();
 				break;
-			case 'p':
+			case 'p': // places
 				next_members_p();
 				break;
 			}
 		}
 
+		// Display previous set of members
 		void previous_pressed() {
-			switch (type) {
-			case 'd':
+			switch (type) { // function called based on members being displayed
+			case 'd': // drivers
 				previous_members_d();
 				break;
-			case 'c':
+			case 'c': // customers
 				previous_members_c();
 				break;
-			case 'p':
+			case 'p': // places
 				previous_members_p();
 				break;
 			}
 		}
 
-		void detach_all_d();
+		void detach_all_d(); // Takes all drivers off of the window
 
-		void detach_all_c();
+		void detach_all_c(); // Takes all customers off of the window
 
-		void detach_all_p();
+		void detach_all_p(); // Takes all places off of the window
 
-		void attach_all_d();
+		void attach_all_d(); // Puts all drivers to be displayed on the window
 
-		void attach_all_c();
+		void attach_all_c(); // Puts all customers to be displayed on the window
 
-		void attach_all_p();
+		void attach_all_p(); // Puts all places to be displayed on the window
 
-		void next_members_d();
+		void next_members_d(); // Display next function for drivers
 
-		void next_members_c();
+		void next_members_c(); // Display next function for customers
 
-		void next_members_p();
+		void next_members_p(); // Display next function for places
 
-		void previous_members_d();
+		void previous_members_d(); // Display previous function for drivers
 
-		void previous_members_c();
+		void previous_members_c(); // Display previous function for customers
 
-		void previous_members_p();
+		void previous_members_p(); // Display previous function for places
 
-		void quit();
+		void quit(); // Close the window
 
 		//callback functions
 		static void cb_next(Address, Address);
@@ -114,14 +124,21 @@ namespace disp_lib {
 		static void cb_quit(Address, Address);
 	};
 
+	// ------------------------------ DRIVERS --------------------------------------------------
+	// *Note* The definitions for customers and places follow the same structure
+
+	// Constructor definitio (for drivers)
 	Disp_3::Disp_3(Point xy, int w, int h, const string& title, const vector<Driver>& m) :
 		//initialization
 		Window(xy, w, h, title),
 
+		// Pass in list of drivers
 		d_members(m),
 
+		// Initialize screen number to 0 for displaying the first 9 members
 		screen_num(0),
 
+		// Set location and sizes of widgets
 		next_button(
 			Point(x_max() - 70, y_max() - 20),
 			70, 20,
@@ -148,6 +165,7 @@ namespace disp_lib {
 			"Format: 3x3"
 		),
 
+		// Set up the out boxes for displaying driver information
 		member1_info(Point(x_max() / 5, y_max() / 5 * 2 - 50), 100, 85, ""),
 		member2_info(Point(x_max() / 5 * 2, y_max() / 5 * 2 - 50), 100, 85, ""),
 		member3_info(Point(x_max() / 5 * 3, y_max() / 5 * 2 - 50), 100, 85, ""),
@@ -163,59 +181,70 @@ namespace disp_lib {
 	{//constructor body
 	 // get all images for members
 		type = 'd';
-		int x_coord, y_coord;
+		int x_coord, y_coord; // to be used for positioning the images
 		string image_name;
 		for (int i = 0; i < d_members.size(); ++i) {
+			// Switch case for determining placement of drivers
 			switch (i % 9) {
-			case 0:
+			case 0: // row 1, column 1
 				x_coord = x_max() / 5 + x_max() / 20;
 				y_coord = y_max() / 5 * 2 - 50;
 				break;
-			case 1:
+			case 1: // row 1, column 2
 				x_coord = x_max() / 5 * 2 + x_max() / 20;
 				y_coord = y_max() / 5 * 2 - 50;
 				break;
-			case 2:
+			case 2: // row 1, column 3
 				x_coord = x_max() / 5 * 3 + x_max() / 20;
 				y_coord = y_max() / 5 * 2 - 50;
 				break;
-			case 3:
+			case 3: // row 2, column 1
 				x_coord = x_max() / 5 + x_max() / 20;
 				y_coord = y_max() / 5 * 3 - 35;
 				break;
-			case 4:
+			case 4: // row 2, column 2
 				x_coord = x_max() / 5 * 2 + x_max() / 20;
 				y_coord = y_max() / 5 * 3 - 35;
 				break;
-			case 5:
+			case 5: // row 2, column 3
 				x_coord = x_max() / 5 * 3 + x_max() / 20;
 				y_coord = y_max() / 5 * 3 - 35;
 				break;
-			case 6:
+			case 6: // row 3, column 1
 				x_coord = x_max() / 5 + x_max() / 20;
 				y_coord = y_max() / 5 * 4 - 20;
 				break;
-			case 7:
+			case 7: // row 3, column 2
 				x_coord = x_max() / 5 * 2 + x_max() / 20;
 				y_coord = y_max() / 5 * 4 - 20;
 				break;
-			case 8:
+			case 8: // row 3, column 3
 				x_coord = x_max() / 5 * 3 + x_max() / 20;
 				y_coord = y_max() / 5 * 4 - 20;
 				break;
 			}
+			// Extract photo name
 			image_name = d_members[i].get_photo();
+			// Append ".jpg" to photo name for proper formatting
 			stringstream ss;
 			ss << image_name << ".jpg";
 			ss >> image_name;
+
+			// Create pointer to image
 			Image* memb_im = new Image(Point(x_coord - x_max() / 20, y_coord - y_max() / 10), image_name);
+			// Resize image to fit in display matrix
 			memb_im->resize(x_max() / 10, y_max() / 10);
+			// Add pointer to running list
 			member_images.push_back(memb_im);
 		}
 
+		// Put all drivers to be displayed on the window
 		attach_all_d();
 
+		// Always have quit button
 		attach(quit_button);
+
+		// Next button only shown if there are more drivers than can be displayed on one screen
 		attach(next_button);
 		if (d_members.size() <= 9)
 			next_button.hide(); // no more items to display
@@ -224,6 +253,9 @@ namespace disp_lib {
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
 
+	// ------------------------------------------ CUSTOMERS ------------------------------------------
+
+	// Constructor definition (for customers)
 	Disp_3::Disp_3(Point xy, int w, int h, const string& title, const vector<Customer>& m) :
 		//initialization
 		Window(xy, w, h, title),
@@ -333,6 +365,8 @@ namespace disp_lib {
 		attach(previous_button);
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
+
+	// ----------------------------------------- PLACES ----------------------------------------
 
 	Disp_3::Disp_3(Point xy, int w, int h, const string& title, const vector<Place>& m) :
 		//initialization
@@ -444,20 +478,23 @@ namespace disp_lib {
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
 
-
-
 	//callback functions for buttons
 	void Disp_3::cb_quit(Address, Address pw) {
 		reference_to<Disp_3>(pw).quit();
 	}
 
 	void Disp_3::quit() {
-		hide();
+		hide(); // close window
 	}
 
 	void Disp_3::cb_previous(Address, Address pw) {
 		reference_to<Disp_3>(pw).previous_pressed();
 	}
+
+	// ------------------- DETACH FUNCTIONS --------------------------
+	// Members are only detached if they were attached in the first place
+	// This is determined by examining the size of the member list with the
+	// screen number
 
 	void Disp_3::detach_all_d() {
 		if (d_members.size() >= screen_num * 9 + 1) {
@@ -575,6 +612,11 @@ namespace disp_lib {
 			detach(*member_images[screen_num * 9 + 8]);
 		}
 	}
+
+	// ---------------------- ATTACH FUNCTIONS -------------------------------
+	// Only attach members if they exist
+	// This is determined by examining the size of the member list
+	// with the screen number
 
 	void Disp_3::attach_all_d() {
 		if (d_members.size() >= screen_num * 9 + 1) {
@@ -720,6 +762,8 @@ namespace disp_lib {
 		}
 	}
 
+	// -------------------------------- NEXT FUNCTION ------------------------------
+
 	void Disp_3::next_members_d() {
 		// 9 items per screen (0-8), (9-17), (18-26), ...
 		// Screen:          0      1      2     ...
@@ -774,9 +818,12 @@ namespace disp_lib {
 			next_button.hide();
 	}
 
+	// Callback associated with next members
 	void Disp_3::cb_next(Address, Address pw) {
 		reference_to<Disp_3>(pw).next_pressed();
 	}
+
+	// ----------------------- PREVIOUS FUNCTIONS ------------------------------
 
 	void Disp_3::previous_members_d() {
 		// Clean up screen

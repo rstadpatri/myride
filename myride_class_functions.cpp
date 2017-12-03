@@ -1,21 +1,24 @@
-//Nick Nelson - UIN: 425005869 - hw5 - 10/2/17
-//This program functions like Uber. It stores customers and drivers and allows customers to request rides.
-//It now allows for the input of a file to import data.
-//I have commented in where I would check for errors if I had more time to give to this problem.
+/*
+Nick Esposito, Nick Nelson, & Reuben Tadpatri
+Fall Semester 2017 (Nov - Dec)
+Solution to Final Project
+Based on solution to HW 5
+*/
 
 #include "std_lib_facilities_4.h"
-#include "myride_class_functions.h"
+#include "myride_class_functions.h" // instantiated functions which are defined below
 
 	constexpr double R = 3963.1676;  //Radius of Earth
 	constexpr double pi = 3.14159;
-	string filename = "Data File";
+	string filename = "Data File"; // Using "Data File" as the master file for the project
 
-	namespace funct_lib{
+	namespace funct_lib{ // to be used by GUI windows
 
 	vector<Place> places;
 	vector<Customer> customers;
 	vector<Driver> drivers;
 
+	// Getter functions (for passing members to display GUIs)
 	vector<Place>& get_places() {
 		return places;
 	}
@@ -33,8 +36,7 @@
 		return radian;
 	}
 
-	double distance_between(double x1d, double y1d, double x2d, double y2d) {  
-		// Formula for calculating distance between waypoints
+	double distance_between(double x1d, double y1d, double x2d, double y2d) {  // Formula for calculating distance between waypoints
 		double x1 = to_radian(x1d);
 		double y1 = to_radian(y1d);
 		double x2 = to_radian(x2d);
@@ -44,6 +46,7 @@
 		return distance;
 	}
 
+	// For comparing drivers
 	bool operator==(Driver a, Driver b) {
 		if (a.get_name() == b.get_name()) {
 			return true;
@@ -52,6 +55,7 @@
 			return false;
 	}
 
+	// Overloaded output operator
 	ostream& operator<<(ostream& ost, Place p) {
 		ost << p.get_name();
 		return ost;
@@ -72,8 +76,7 @@
 
 	}
 
-	double find_distance(Place x, Place y) {  
-		//Essentially a more user friendly distance_between function, takes Place_info as an input.
+	double find_distance(Place x, Place y) {  //Essentially a more user friendly distance_between function, takes Place_info as an input.
 		double distance = distance_between(x.get_latitude(), x.get_longitude(), y.get_latitude(), y.get_longitude());
 		return distance;
 	}
@@ -81,8 +84,7 @@
 	void add_funds(double addend) {
 		//Adds funds (only works for customer accounts)
 		string customer_name;
-		//cout << "Whose account would you like to credit: ";  NEED GUI SUPPORT HERE
-		//cin >> customer_name;
+		// GUI takes in customer name and added funds
 		for (unsigned int i = 0; i < customers.size(); ++i) {
 			if (customers[i].get_name() == customer_name) {
 				customers[i].add_funds(addend);
@@ -101,16 +103,16 @@
 		}
 	}
 
-	void remove_member(char c, string name) { 
+	void remove_member(char c, string name) {  //GUI provides call with different types of classes
 		switch (c) {
-		case 'c':
+		case 'c': // remove Customer
 			for (unsigned int i = 0; i < customers.size(); ++i) {
 				if (customers[i].get_name() == name) {
 					customers.erase(customers.begin() + i);
 					break;
 				}
 			}
-		case 'd':
+		case 'd': // remove Driver
 			for (unsigned int i = 0; i < drivers.size(); ++i) {
 				if (drivers[i].get_name() == name) {
 					drivers.erase(drivers.begin() + i);
@@ -118,7 +120,7 @@
 				}
 			}
 			break;
-		case 'p':
+		case 'p': // remove Place
 			for (unsigned int i = 0; i < places.size(); ++i) {
 				if (places[i].get_name() == name) {
 					places.erase(places.begin() + i);
@@ -126,7 +128,7 @@
 				}
 			}
 			break;
-		default:
+		default: // default case does not remove a member
 			break;
 		}
 	}
@@ -145,13 +147,12 @@
 	}
 
 	vector<Place> ride_ordest(string location, int nametag, string destination_tag) {
-		// Returns the origin and destination of the ride
+
 		vector<Place> ordest;
 
 		for (unsigned int i = 0; i < places.size(); ++i) {
 			if (location == places[i].get_name()) {
 				ordest.push_back(places[i]);
-				i = places.size();
 			}
 		}
 
@@ -183,6 +184,7 @@
 		return ordest;
 	}
 
+	// Returns all customers with a negative balance
 	vector<Customer> find_neg_customer() {
 		vector<Customer> negative_customers;
 		for (unsigned int i = 0; i < customers.size(); ++i) {
@@ -211,8 +213,8 @@
 		return designated_driver;
 	}
 
+	// Returns all drivers within a given radius of a place with a given tag
 	vector<Driver> find_driver_within(string tag, double radius) {
-		// Finds all drivers within radius of all locations with tag
 		vector<Driver> eligible_drivers;
 		vector<Place> possible_places;
 		for (unsigned int i = 0; i < places.size(); ++i) {		//Finds all places with tag
@@ -242,8 +244,8 @@
 		return eligible_drivers;
 	}
 
+	// Returns all places with a given tag
 	vector<Place> find_places_tags(string tag) {
-		// Finds all places with a certain tag
 		vector<Place> tagged_places;
 		for (unsigned int i = 0; i < places.size(); ++i) {
 			vector<string> tags = places[i].get_tags();
@@ -299,7 +301,7 @@
 	}
 
 	void import_data() {
-		//Imports data from the master file. 
+		//Imports data from a file. Function returns string of filename for future overwriting.
 
 		try {
 			ifstream ist{ "Data File" };
@@ -383,6 +385,7 @@
 
 	void export_data() {
 		//Simply writes all information back out to file in the proper format.
+		//If improper filename was given, info is written to file name "null"
 
 		try {
 			ofstream ost{ filename };
@@ -416,4 +419,65 @@
 			keep_window_open("x");
 		}
 	}
+
+	// ----------------------- OLD MAIN FUNCTION ------------------------------------------------------------------------------------------------------------
+	//int main() {
+	////	string filename = initializing_file();  //For HW5; calls function that imports data from input file
+	////
+	////	
+	////	// NEED GUI SUPPORT --> Main Menu screen
+	////	//int select = 1;
+	////	//cout << "What would you like to do?\n";
+	////	//while (select != 0) {
+	////	//	cout << "\n1 - add customer\n2 - add driver\n3 - add place\n4 - add default places, drivers, and customers\n5 - add funds\n6 - request ride\n" 
+	////	//		<< "7 - view customer info\n8 - view driver info\n9 - view places\n0 - quit program\n";
+	////	//	cin >> select;
+	////	//	switch (select) {
+	////	//	case 1:
+	////	//		add_customer(customers);
+	////	//		break;
+	////	//	case 2:
+	////	//		add_driver(drivers);
+	////	//		break;
+	////	//	case 3:
+	////	//		add_place(places);
+	////	//		break;
+	////	//	case 4:
+	////	//		initialize_places(places, drivers, customers);
+	////	//		break;
+	////	//	case 5:
+	////	//		double funds;
+	////	//		cout << "How much funds would you like to add?\n";
+	////	//		cin >> funds;
+	////	//		customers = add_funds(funds, customers);
+	////	//		break;
+	////	//	case 6:
+	////	//		request_ride(customers, places, drivers);
+	////	//		break;
+	////	//	case 7:
+	////	//		for (unsigned int i = 0; i < customers.size(); ++i) { 
+	////	//			customers[i].print(); 
+	////	//		}
+	////	//		break;
+	////	//	case 8:
+	////	//		for (unsigned int i = 0; i < drivers.size(); ++i) { 
+	////	//			drivers[i].print(); 
+	////	//		}
+	////	//		break;
+	////	//	case 9:
+	////	//		for (unsigned int i = 0; i < places.size(); ++i) {
+	////	//			places[i].print();
+	////	//		}
+	////	//		break;
+	////	//	case 0:
+	////	//		write_to_file(filename, places, customers, drivers);
+	////	//		return 0;
+	////	//	default:
+	////	//		cout << "Enter a valid selection.\n";
+	////	//		break;
+	////	//	}
+	////	//}
+	//	return 0;
+	//}
+
 	}

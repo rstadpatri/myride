@@ -1,5 +1,12 @@
+/*
+Nick Esposito, Nick Nelson, & Reuben Tadpatri
+Fall Semester 2017 (Nov - Dec)
+Solution to Final Project
+Based on samplegui.cpp
+*/
+
 #include "std_lib_facilities_4.h"
-#include "myride_class_functions.h"
+#include "myride_class_functions.h" // functions from the myRide System
 #include <sstream>     // for string streams
 #include "Graph.h"     // next 3 are for graphics library
 #include "GUI.h"
@@ -13,14 +20,15 @@ namespace disp_lib {
 	using namespace Graph_lib;
 	using namespace std;
 
+	// 4x4 display window
 	struct Disp_4 : Graph_lib::Window {
 
-		//constructor
+		//constructors for Drivers, Customers, Places
 		Disp_4(Point xy, int w, int h, const string& title, const vector<Driver>& m);
 		Disp_4(Point xy, int w, int h, const string& title, const vector<Customer>& m);
 		Disp_4(Point xy, int w, int h, const string& title, const vector<Place>& m);
 
-		//destructor
+		//destructor (needed for pointers to images)
 		~Disp_4() {
 			for (int i = 0; i < member_images.size(); ++i) {
 				delete member_images[i];
@@ -62,59 +70,61 @@ namespace disp_lib {
 		Button previous_button;
 		Button quit_button;
 
+		// Display next set of members
 		void next_pressed() {
-			switch (type) {
-			case 'd':
+			switch (type) { // function called based on members being displayed
+			case 'd': // drivers
 				next_members_d();
 				break;
-			case 'c':
+			case 'c': // customers
 				next_members_c();
 				break;
-			case 'p':
+			case 'p': // places
 				next_members_p();
 				break;
 			}
 		}
 
+		// Display previous set of members
 		void previous_pressed() {
-			switch (type) {
-			case 'd':
+			switch (type) { // function called based on members being displayed
+			case 'd': // drivers
 				previous_members_d();
 				break;
-			case 'c':
+			case 'c': // customers
 				previous_members_c();
 				break;
-			case 'p':
+			case 'p': // places
 				previous_members_p();
 				break;
 			}
 		}
 
-		void detach_all_d();
+		void detach_all_d(); // Takes all drivers off of the window
 
-		void detach_all_c();
+		void detach_all_c(); // Takes all customers off of the window
 
-		void detach_all_p();
+		void detach_all_p(); // Takes all places off of the window
 
-		void attach_all_d();
+		void attach_all_d(); // Puts all drivers to be displayed on the window
 
-		void attach_all_c();
+		void attach_all_c(); // Puts all customers to be displayed on the window
 
-		void attach_all_p();
+		void attach_all_p(); // Puts all places to be displayed on the window
 
-		void next_members_d();
+		void next_members_d(); // Display next function for drivers
 
-		void next_members_c();
+		void next_members_c(); // Display next function for customers
 
-		void next_members_p();
+		void next_members_p(); // Display next function for places
 
-		void previous_members_d();
+		void previous_members_d(); // Display previous function for drivers
 
-		void previous_members_c();
+		void previous_members_c(); // Display previous function for customers
 
-		void previous_members_p();
+		void previous_members_p(); // Display previous function for places
 
-		void quit();
+		void quit(); // Close the window
 
 		//callback functions
 		static void cb_next(Address, Address);
@@ -122,14 +132,21 @@ namespace disp_lib {
 		static void cb_quit(Address, Address);
 	};
 
+	// -------------------------------------------- DRIVERS ------------------------------------------------
+	// *Note* The definitions for customers and places follow the same structure
+
+	// Constructor definition (for drivers)
 	Disp_4::Disp_4(Point xy, int w, int h, const string& title, const vector<Driver>& m) :
 		//initialization
 		Window(xy, w, h, title),
 
+		// Pass in list of drivers
 		d_members(m),
 
+		// Initialize screen number to 0 for displaying the first 16 members
 		screen_num(0),
 
+		// Set locations and sizes of widgets
 		next_button(
 			Point(x_max() - 70, y_max() - 20),
 			70, 20,
@@ -156,6 +173,7 @@ namespace disp_lib {
 			"Format: 4x4"
 		),
 
+		// Set up the out boxes for displaying driver information
 		member1_info(Point(x_max() / 5 - 50, y_max() / 5), 100, 80, ""),
 		member2_info(Point(x_max() / 5 * 2 - 50, y_max() / 5), 100, 80, ""),
 		member3_info(Point(x_max() / 5 * 3 - 50, y_max() / 5), 100, 80, ""),
@@ -177,105 +195,120 @@ namespace disp_lib {
 		member16_info(Point(x_max() / 5 * 4 - 50, y_max() / 5 * 4), 100, 80, "")
 
 	{//constructor body
-	 // get all images for members
+	 // get all images for drivers
 		type = 'd';
-		int x_coord, y_coord;
+		int x_coord, y_coord; // to be used for positioning the images
 		string image_name;
 		for (int i = 0; i < d_members.size(); ++i) {
+			// Switch case for determining placement of drivers
 			switch (i % 16) {
-			case 0:
+			case 0: // row 1, column 1
 				x_coord = x_max() / 5;
 				y_coord = y_max() / 5;
 				break;
-			case 1:
+			case 1: // row 1, column 2
 				x_coord = x_max() / 5 * 2;
 				y_coord = y_max() / 5;
 				break;
-			case 2:
+			case 2: // row 1, column 3
 				x_coord = x_max() / 5 * 3;
 				y_coord = y_max() / 5;
 				break;
-			case 3:
+			case 3: // row 1, column 4
 				x_coord = x_max() / 5 * 4;
 				y_coord = y_max() / 5;
 				break;
-			case 4:
+			case 4: // row 2, column 1
 				x_coord = x_max() / 5;
 				y_coord = y_max() / 5 * 2;
 				break;
-			case 5:
+			case 5: // row 2, column 2
 				x_coord = x_max() / 5 * 2;
 				y_coord = y_max() / 5 * 2;
 				break;
-			case 6:
+			case 6: // row 2, column 3
 				x_coord = x_max() / 5 * 3;
 				y_coord = y_max() / 5 * 2;
 				break;
-			case 7:
+			case 7: // row 2, column 4
 				x_coord = x_max() / 5 * 4;
 				y_coord = y_max() / 5 * 2;
 				break;
-			case 8:
+			case 8: // row 3, column 1
 				x_coord = x_max() / 5;
 				y_coord = y_max() / 5 * 3;
 				break;
-			case 9:
+			case 9: // row 3, column 2
 				x_coord = x_max() / 5 * 2;
 				y_coord = y_max() / 5 * 3;
 				break;
-			case 10:
+			case 10: // row 3, column 3
 				x_coord = x_max() / 5 * 3;
 				y_coord = y_max() / 5 * 3;
 				break;
-			case 11:
+			case 11: // row 3, column 4
 				x_coord = x_max() / 5 * 4;
 				y_coord = y_max() / 5 * 3;
 				break;
-			case 12:
+			case 12: // row 4, column 1
 				x_coord = x_max() / 5;
 				y_coord = y_max() / 5 * 4;
 				break;
-			case 13:
+			case 13: // row 4, column 2
 				x_coord = x_max() / 5 * 2;
 				y_coord = y_max() / 5 * 4;
 				break;
-			case 14:
+			case 14: // row 4, column 3
 				x_coord = x_max() / 5 * 3;
 				y_coord = y_max() / 5 * 4;
 				break;
-			case 15:
+			case 15: // row 4, column 4
 				x_coord = x_max() / 5 * 4;
 				y_coord = y_max() / 5 * 4;
 				break;
 			}
+		// Extract photo name
 		image_name = d_members[i].get_photo();
+		// Append ".jpg" to photo name for proper formatting
 		stringstream ss;
 		ss << image_name << ".jpg";
 		ss >> image_name;
+		
+		// Create pointer to image
 		Image* memb_im = new Image(Point(x_coord - y_max() / 20, y_coord - y_max() / 10), image_name);
+		// Resize image to fit in display matrix
 		memb_im->resize(y_max() / 10, y_max() / 10);
+		// Add pointer to running list
 		member_images.push_back(memb_im);
 		}
 
+		// Put all drivers to be displayed on the window
 		attach_all_d();
 
+		// Always have quit button
 		attach(quit_button);
+
+		// Next button only shown if there are more drivers than can be displayed on one window
 		attach(next_button);
 		if (d_members.size() <= 16)
 			next_button.hide(); // no more items to display
-		attach(format);
+		attach(format); // 4x4
 		attach(previous_button);
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
 
+	// ----------------------------------- CUSTOMERS ---------------------------------------------------------
+
+	// Constructor definition (for customers)
 	Disp_4::Disp_4(Point xy, int w, int h, const string& title, const vector<Customer>& m) :
 		//initialization
 		Window(xy, w, h, title),
 
-		c_members(m),
+		c_members(m), // store list of customers
 
-		screen_num(0),
+		screen_num(0), // initialize screen number to 0
 
+		// Set size and position of all widgets
 		next_button(
 			Point(x_max() - 70, y_max() - 20),
 			70, 20,
@@ -302,6 +335,7 @@ namespace disp_lib {
 			"Format: 4x4"
 		),
 
+		// Setup outboxes for each customer's information
 		member1_info(Point(x_max() / 5 - 50, y_max() / 5), 100, 70, ""),
 		member2_info(Point(x_max() / 5 * 2 - 50, y_max() / 5), 100, 70, ""),
 		member3_info(Point(x_max() / 5 * 3 - 50, y_max() / 5), 100, 70, ""),
@@ -412,6 +446,8 @@ namespace disp_lib {
 		attach(previous_button);
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
+
+		// ----------------------------------------------- PLACES --------------------------------
 
 	Disp_4::Disp_4(Point xy, int w, int h, const string& title, const vector<Place>& m) :
 		//initialization
@@ -558,21 +594,23 @@ namespace disp_lib {
 		previous_button.hide(); // going to start with first elements, therefore no previous
 	}
 
-
-
 	//callback functions for buttons
 	void Disp_4::cb_quit(Address, Address pw) {
 		reference_to<Disp_4>(pw).quit();
 	}
 
 	void Disp_4::quit() {
-		hide();
+		hide(); // close window
 	}
 
 	void Disp_4::cb_previous(Address, Address pw) {
 		reference_to<Disp_4>(pw).previous_pressed();
 	}
 
+	// ----------------------------- DETACH FUNCTIONS ---------------------------------
+	// Members are only detached if they were attached in the first place
+	// This is determined by examining the size of the member list with the 
+	// screen number
 	void Disp_4::detach_all_d() {
 		if (d_members.size() >= screen_num * 16 + 1) {
 			detach(member1_info);
@@ -774,6 +812,10 @@ namespace disp_lib {
 		}
 	}
 
+	// -------------------------------- ATTACH FUNCTIONS -------------------------------------
+	// Only attach members if they exist
+	// This is determined by examining the size of the member list
+	// with the screen number
 	void Disp_4::attach_all_d() {
 		if (d_members.size() >= screen_num * 16 + 1) {
 			attach(member1_info);
@@ -1024,8 +1066,10 @@ namespace disp_lib {
 		}
 	}
 
+	// ----------------------------------------- NEXT FUNCTION -----------------------------------------
+
 	void Disp_4::next_members_d() {
-		// 4 items per screen (0-3), (4-7), (8-11), ...
+		//  16 items per screen (0-15), (16-31), (32-47), ...
 		// Screen:          0      1      2     ...
 
 		// Clean up the screen in case there are not enough objects to display
@@ -1043,7 +1087,7 @@ namespace disp_lib {
 	}
 
 	void Disp_4::next_members_c() {
-		// 4 items per screen (0-3), (4-7), (8-11), ...
+		// 16 items per screen (0-15), (16-31), (32-47), ...
 		// Screen:          0      1      2     ...
 
 		// Clean up the screen in case there are not enough objects to display
@@ -1061,7 +1105,7 @@ namespace disp_lib {
 	}
 
 	void Disp_4::next_members_p() {
-		// 4 items per screen (0-3), (4-7), (8-11), ...
+		// 16 items per screen (0-15), (16-31), (32-47), ...
 		// Screen:          0      1      2     ...
 
 		// Clean up the screen in case there are not enough objects to display
@@ -1078,10 +1122,12 @@ namespace disp_lib {
 			next_button.hide();
 	}
 
+	// Callback associated with next members
 	void Disp_4::cb_next(Address, Address pw) {
 		reference_to<Disp_4>(pw).next_pressed();
 	}
 
+	// ------------------------------------------ PREVIOUS FUNCTIONS --------------------------------------
 	void Disp_4::previous_members_d() {
 		// Clean up screen
 		detach_all_d();
